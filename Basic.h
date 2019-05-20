@@ -101,3 +101,118 @@ Bitmap Crop(Bitmap bmp, int xA, int yA, int xB, int yB)
 		return result;
 	}
 }
+
+Bitmap FlipLR(const Bitmap &in)
+{
+	Bitmap out;
+	out.height = in.height;
+	out.width = in.width;
+	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
+	out.pixels = new unsigned char[out.rowSize*out.height];
+	for (int row = 0; row < in.height; row++)
+	{
+		for (int col = 0; col < in.width; col++)
+		{
+			Color color;
+			GetPixel(in, row, col, color);
+			SetPixel(out, row, in.width - col - 1, color);
+		}
+	}
+	return out;
+}
+
+Bitmap FlipUD(const Bitmap &in)
+{
+	Bitmap out;
+	out.height = in.height;
+	out.width = in.width;
+	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
+	out.pixels = new unsigned char[out.rowSize*out.height];
+	for (int row = 0; row < in.height; row++)
+	{
+		for (int col = 0; col < in.width; col++)
+		{
+			Color color;
+			GetPixel(in, row, col, color);
+			SetPixel(out, in.height - 1 - row, col, color);
+		}
+	}
+	return out;
+}
+
+Bitmap FlipAll(const Bitmap &in)
+{
+	Bitmap out;
+	out.height = in.height;
+	out.width = in.width;
+	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
+	out.pixels = new unsigned char[out.rowSize*out.height];
+	for (int row = 0; row < in.height; row++)
+	{
+		for (int col = 0; col < in.width; col++)
+		{
+			Color color;
+			GetPixel(in, row, col, color);
+			SetPixel(out, in.height - 1 - row, in.width - 1 - col, color);
+		}
+	}
+	return out;
+}
+
+Bitmap Resize(const Bitmap &in, int newWidth, int newHeight)
+{
+	Bitmap out;
+	double factor_x;
+	double factor_y;
+
+	factor_x = (double)newWidth / in.width;
+	factor_y = (double)newHeight / in.height;
+	//out.width = (int)(in.width*factor_x);
+	//out.height = (int)(in.height*factor_y);
+
+	out.width = newWidth;
+	out.height = newHeight;
+	out.rowSize = ((3 * out.width + 3) / 4) * 4;
+	out.pixels = new unsigned char[out.rowSize*out.height];
+	for (int row = 0; row < in.height; row++)
+	{
+		for (int col = 0; col < in.width; col++)
+		{
+			Color color;
+			GetPixel(in, row, col, color);
+			for (int i = 0; i <= (int)(factor_y + 1); i++)
+			{
+				for (int j = 0; j <= (int)(factor_x + 1); j++)
+				{
+					SetPixel(out, (int)(row*factor_y + i), (int)(col* factor_x + j), color);
+				}
+			}
+		}
+	}
+	return out;
+}
+
+Bitmap Resize(const Bitmap &in, double factor)
+{
+	Bitmap out;
+	out.width = (int)(in.width*factor);
+	out.height = (int)(in.height*factor);
+	out.rowSize = ((3 * out.width + 3) / 4) * 4;
+	out.pixels = new unsigned char[out.rowSize*out.height];
+	for (int row = 0; row < in.height; row++)
+	{
+		for (int col = 0; col < in.width; col++)
+		{
+			Color color;
+			GetPixel(in, row, col, color);
+			for (int i = 0; i <= (factor + 1); i++)
+			{
+				for (int j = 0; j <= (factor + 1); j++)
+				{
+					SetPixel(out, (int)(row*factor + i), (int)(col* factor + j), color);
+				}
+			}
+		}
+	}
+	return out;
+}
