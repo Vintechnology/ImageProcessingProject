@@ -1,4 +1,4 @@
-#include "Bitmap.h"
+#include "bitmap\Bitmap.h"
 #include "linalg\linalg.h"
 #include <iostream>
 
