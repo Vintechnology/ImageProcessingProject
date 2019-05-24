@@ -1,6 +1,7 @@
 #ifndef _BITMAP_
 #define _BITMAP_
 
+
 struct Bitmap
 {
 	int width;
