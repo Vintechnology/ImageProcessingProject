@@ -1,4 +1,4 @@
-#include "Bitmap.h"
+#include "bitmap/Bitmap.h"
 #include <iostream>
 
 Bitmap Turn90Degree(Bitmap bmp)

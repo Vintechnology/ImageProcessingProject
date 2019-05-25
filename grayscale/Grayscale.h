@@ -1,4 +1,4 @@
-#include "Bitmap.h"
+#include "../bitmap/Bitmap.h"
 struct Grayscale
 {
 	unsigned char I;
