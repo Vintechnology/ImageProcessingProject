@@ -7,7 +7,7 @@ struct Grayscale
 };
 struct HSVcolor
 {
-	unsigned char H, S, V;
+	double H, S, V;
 };
 enum colorCanHold { RED, YELLOW, GREEN, BLUE, PURPLE };
 //Function
@@ -179,7 +179,7 @@ Color convertHSVtoRGB(HSVcolor in)
 	}
 	return out;
 }
-void holeAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor)
+void holdAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor)
 {
 	out.height = bmp.height;
 	out.width = bmp.width;
