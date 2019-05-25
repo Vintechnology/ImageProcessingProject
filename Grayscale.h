@@ -9,10 +9,11 @@ struct HSVcolor
 {
 	double H, S, V;
 };
+
+
 enum colorCanHold { RED, YELLOW, GREEN, BLUE, PURPLE };
-//Function
-void convertGrayScale(const Bitmap &bmp, Bitmap &out);
-void holeAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor);
+
+
 // file .cpp
 void getGrayColor(Color color, Grayscale &pGray)
 {
