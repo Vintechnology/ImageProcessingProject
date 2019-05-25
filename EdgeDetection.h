@@ -1,4 +1,4 @@
-#include "bitmap\Bitmap.h"
+#include "bitmap/Bitmap.h"
 #include <math.h>
 
 Bitmap Sobel(const Bitmap &in)

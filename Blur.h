@@ -1,5 +1,5 @@
-#include "bitmap\Bitmap.h"
-#include "linalg\linalg.h"
+#include "bitmap/Bitmap.h"
+#include "linalg/linalg.h"
 #include <iostream>
 
 #define PI 3.1415926
