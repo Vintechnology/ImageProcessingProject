@@ -1,33 +1,85 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "util/LinkedList.h"
 #include "Parsers.h"
 
-std::map<const char*, ArgumentParser> dictionary;
+struct cmp_str
+{
+	bool operator()(char const *a, char const *b) const
+	{
+		return std::strcmp(a, b) < 0;
+	}
+};
+std::map<const char*, ArgumentParser, cmp_str> dictionary;
+
+
 
 void InitDictionary()
 {
-	dictionary.insert(std::make_pair("sobel", SobelParser));
+	// Basic
+	dictionary.insert(std::make_pair("rotate", RotateParser)); // usable
+	dictionary.insert(std::make_pair("flip", FlipParser));    // usable
+	dictionary.insert(std::make_pair("crop", CropParser));   // usable
+	dictionary.insert(std::make_pair("scale", ScaleParser));
+	dictionary.insert(std::make_pair("resize", ResizeParser));
+	// Edge Detection
+	dictionary.insert(std::make_pair("sobel", SobelParser));    // usable
+	dictionary.insert(std::make_pair("robert", RobertParser));  // usable
+	dictionary.insert(std::make_pair("prewitt", PrewittParser));// usable
+	// Blur
+	dictionary.insert(std::make_pair("blur", BlurParser)); // usable
+	// Color Adjust
+	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser));
+	dictionary.insert(std::make_pair("nearest", NearestColourParser));
+	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));
+	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));
+	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser));
+	// Grayscale
+	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));
+}
+
+void EvaluateCommand(char** arg, int length) {
+	if (length == 1) 
+	{
+		throw std::string("No command given.\n");
+	}
+	if (dictionary.count(arg[1]) == 0) 
+	{
+		throw std::string("No such command \"") + arg[1] + "\".\n";
+	}
+
+	if (length == 2)
+	{
+		throw std::string("No path given. Please specify the filename of your image.\n");
+	}
+}
+
+void handlingCommand(char** arg, int length) 
+{
+	EvaluateCommand(arg, length); 
+	ArgumentParser parseFunc = dictionary.at(arg[1]);
+
+	LinkedStrList *argList = new LinkedStrList;
+	LinkedList::Init(argList);
+
+	for (int i = 2; i < length; i++) {
+		LinkedList::AddTail(argList, arg[i]);
+	}
+
+	parseFunc(argList);
+	LinkedList::Delete(argList);
 }
 
 void main(int argc, char* argv[]) 
 {
-	/*
-	for (int i = 0; i < argc; i++) {
-		std::cout << argv[i] << std::endl;
+	try {
+		InitDictionary();
+		handlingCommand(argv, argc);
 	}
-	*/
-	if (argc == 1) {
-		std::cout << "No command given" << std::endl;
-		return;
+	catch (std::string str) {
+		std::cout << str;
 	}
-	if (dictionary.count(argv[2]) == 0) {
-		std::cout << "No such command " << argv[2] << std::endl;
-		return;
-	}
-	ArgumentParser parseFunc = dictionary.at(argv[2]);
-	int offIndex;
-	Bitmap result = parseFunc(argv, argc, offIndex);
 
 }
 

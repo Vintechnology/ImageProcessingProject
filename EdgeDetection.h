@@ -1,3 +1,4 @@
+#pragma once
 #include "bitmap/Bitmap.h"
 #include <math.h>
 

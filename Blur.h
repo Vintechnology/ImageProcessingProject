@@ -1,3 +1,4 @@
+#pragma once
 #include "bitmap/Bitmap.h"
 #include "linalg/linalg.h"
 #include <iostream>
@@ -28,7 +29,7 @@ Color Medium(Bitmap bmp, int i, int j, int R)
 	return result;
 }
 
-Bitmap MediumBlur(Bitmap bmp, int R)
+Bitmap MediumBlur(const Bitmap &bmp, int R)
 {
 	Bitmap result;
 	result.height = bmp.height;
@@ -78,7 +79,7 @@ int SumKernel(linalg::Matrix kernel, int R)
 	}return result;
 }
 
-Bitmap GaussianBlur(Bitmap bmp, int R, double sigma)
+Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 {
 
 	Bitmap result;
