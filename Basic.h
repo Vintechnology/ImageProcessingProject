@@ -249,3 +249,33 @@ Bitmap Resize(const Bitmap &in, double factor)
 	}
 	return out;
 }
+
+Bitmap IntegrateImages(Bitmap input1, Bitmap input2, float A, float B)
+{// A and B is the clarity of image "input1" and image "input2"
+	if ((input1.height != input2.height) || (input1.width != input2.width)) std::cout << "The input image size is not correct!!!" << std::endl;
+	else
+	{
+		Bitmap result;
+		result.height = input1.height;
+		result.width = input1.width;
+		result.rowSize = ((3 * result.width + 3) / 4) * 4;
+		result.pixels = new unsigned char[result.height * result.rowSize];
+
+		float factor = A / (A + B);
+
+		for (int i = 0; i < result.height; i++)
+		{
+			for (int j = 0; j < result.width; j++)
+			{
+				Color temp1, temp2, temp;
+				GetPixel(input1, i, j, temp1);
+				GetPixel(input2, i, j, temp2);
+				temp.B = temp1.B*factor + temp2.B*(1 - factor);
+				temp.G = temp1.G*factor + temp2.G*(1 - factor);
+				temp.R = temp1.R*factor + temp2.R*(1 - factor);
+				SetPixel(result, i, j, temp);
+			}
+		}
+		return result;
+	}
+}

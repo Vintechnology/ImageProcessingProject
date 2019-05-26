@@ -6,21 +6,19 @@ struct Grayscale
 {
 	unsigned char I;
 };
+
 struct HSVcolor
 {
 	double H, S, V;
 };
 
-
 enum colorCanHold { RED, YELLOW, GREEN, BLUE, PURPLE };
 
-
-// file .cpp
 void getGrayColor(Color color, Grayscale &pGray)
 {
 	pGray.I = (2 * color.R + 5 * color.G + color.B) / 8;
-
 }
+
 int setAGrayPixel(const Bitmap&bmp, int row, int col, Grayscale gray)
 {
 	if (row < 0 || row >= bmp.height
@@ -33,6 +31,7 @@ int setAGrayPixel(const Bitmap&bmp, int row, int col, Grayscale gray)
 	bmp.pixels[offset + 1] = gray.I;
 	bmp.pixels[offset + 2] = gray.I;
 }
+
 void convertGrayScale(const Bitmap &bmp, Bitmap &out)
 {
 	out.height = bmp.height;
@@ -52,6 +51,7 @@ void convertGrayScale(const Bitmap &bmp, Bitmap &out)
 		}
 	}
 }
+
 void holdRedColor(const Bitmap &bmp, Bitmap &out)
 {
 	out.height = bmp.height;
@@ -78,6 +78,7 @@ void holdRedColor(const Bitmap &bmp, Bitmap &out)
 		}
 	}
 }
+
 HSVcolor convertRGBtoHSV(Color in)
 {
 	HSVcolor    out;
@@ -89,39 +90,38 @@ HSVcolor convertRGBtoHSV(Color in)
 	max = in.R > in.G ? in.R : in.G;
 	max = max  > in.B ? max : in.B;
 
-	out.V = max;                                // v
+	out.V = max;                                
 	delta = max - min;
 	if (delta < 0.00001)
 	{
 		out.S = 0;
-		out.H = 0; // undefined, maybe nan?
+		out.H = 0; 
 		return out;
 	}
-	if (max > 0.0) { // NOTE: if Max is == 0, this divide would cause a crash
-		out.S = (delta / max);                  // s
+	if (max > 0.0) {
+		out.S = (delta / max);                  
 	}
 	else {
-		// if max is 0, then r = g = b = 0              
-		// s = 0, h is undefined
 		out.S = 0.0;
-		out.H = NAN;                            // its now undefined
+		out.H = NAN;                            
 		return out;
 	}
-	if (in.R >= max)                           // > is bogus, just keeps compilor happy
-		out.H = (in.G - in.B) / delta;        // between yellow & magenta
+	if (in.R >= max)                         
+		out.H = (in.G - in.B) / delta;        
 	else
 		if (in.G >= max)
-			out.H = 2.0 + (in.B - in.R) / delta;  // between cyan & yellow
+			out.H = 2.0 + (in.B - in.R) / delta;  
 		else
-			out.H = 4.0 + (in.R - in.G) / delta;  // between magenta & cyan
+			out.H = 4.0 + (in.R - in.G) / delta;  
 
-	out.H *= 60.0;                              // degrees
+	out.H *= 60.0;
 
 	if (out.H < 0.0)
 		out.H += 360.0;
 
 	return out;
 }
+
 Color convertHSVtoRGB(HSVcolor in)
 {
 	double      hh, p, q, t, ff;
@@ -181,6 +181,7 @@ Color convertHSVtoRGB(HSVcolor in)
 	}
 	return out;
 }
+
 void holdAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor)
 {
 	out.height = bmp.height;
@@ -213,4 +214,5 @@ void holdAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor)
 	}
 
 }
+
 
