@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bitmap.h"
+#include "bitmap\Bitmap.h"
 #include <algorithm>
 
 const double pi = 3.1415926;
