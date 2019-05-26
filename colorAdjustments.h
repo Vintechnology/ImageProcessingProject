@@ -1,6 +1,5 @@
 #pragma once
-
-#include "bitmap\Bitmap.h"
+#include "bitmap/Bitmap.h"
 #include <algorithm>
 
 const double pi = 3.1415926;
@@ -9,18 +8,6 @@ struct HSL
 {
 	unsigned int H, S, L;
 };
-
-//
-
-void RGBtoHSL(Color& rgb, HSL& hsl);
-void HSLtoRGB(HSL& hsl, Color& rgb);
-Bitmap ContrastAdjust(const Bitmap& bmp, int value);
-Bitmap NearestColour(const Bitmap& bmp, Color colours[], int colorCount);
-Bitmap LevelsAdjust(const Bitmap& bmp, unsigned char input[], unsigned char output[]);
-Bitmap ErrorDiffuse(const Bitmap& bmp, Color colours[], int colorCount);
-Bitmap ExposureAdjust(const Bitmap& bmp, double value);
-
-//
 
 void RGBtoHSL(Color& rgb, HSL& hsl)
 {

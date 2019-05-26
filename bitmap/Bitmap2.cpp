@@ -13,6 +13,7 @@ int SetPixel(const Bitmap &bmp, int row, int col, Color color)
 	bmp.pixels[offset] = color.B;
 	bmp.pixels[offset + 1] = color.G;
 	bmp.pixels[offset + 2] = color.R;
+	return 1;
 }
 
 int GetPixel(const Bitmap &bmp, int row, int col, Color &color)
@@ -26,6 +27,7 @@ int GetPixel(const Bitmap &bmp, int row, int col, Color &color)
 	color.B = bmp.pixels[offset];
 	color.G = bmp.pixels[offset + 1];
 	color.R = bmp.pixels[offset + 2];
+	return 1;
 }
 
 void Enlarge(const Bitmap &inbmp, Bitmap &outbmp,int factor)
