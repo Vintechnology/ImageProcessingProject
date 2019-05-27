@@ -34,6 +34,7 @@ Bitmap Rotate(const Bitmap &inbmp, int degree)
 			}
 		}
 	}
+	return outbmp;
 }
 
 Bitmap Turn90Degree(Bitmap &bmp)

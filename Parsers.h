@@ -270,17 +270,86 @@ void CropParser(LinkedStrList* arg)
 */
 void ScaleParser(LinkedStrList* arg)
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+	const char* temp;
+	double factor;
+	if (ParseOption(arg, "-f", temp))
+	{
+		factor = ParseDouble(temp);
+	}
+	else
+	{
+		throw std::string("No scale factor given. Please specify with \"-f\" option.\n");
+	}
 
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Scaling...\n";
+	result = Resize(bm, factor);
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 }
 
 /*
 	Use case:
 	<app-name> resize <filename> [args..]
 	-o <string> : output image name (default = "out.bmp")
+
+	-w <integer> : resize width. (default = original width)
+	-h <integer> : resize height. (default = original height)
 */
 void ResizeParser(LinkedStrList* arg) 
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
 
+	const char* temp;
+	int width = bm.width;
+	int height = bm.height;
+	if (ParseOption(arg, "-w", temp))
+	{
+		width = ParseInt(temp);
+		if (width <= 0)
+		{
+			throw std::string("Invalid width size: width cannot be zero or a negative number./n");
+		}
+	}
+
+	if (ParseOption(arg, "-h", temp))
+	{
+		height = ParseInt(temp);
+		if (height <= 0)
+		{
+			throw std::string("Invalid height size: height cannot be zero or a negative number.\n");
+		}
+	}
+
+	if (height == bm.height&&width == bm.width)
+	{
+		throw std::string("The resize width and height are the same with original image. No need to resize.\n");
+	}
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Resizing...\n";
+	result = Resize(bm, width, height);
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 }
 // -- EDGE DETECTION --
 
@@ -456,8 +525,66 @@ void ExposureAdjustParser(LinkedStrList* arg)
 	Use case:
 	<app-name> grayscale <filename> [args..]
 	-o : output image name (default = "out.bmp")
+
+	-hold <string> : don't grayscale a color.
+					 Any one of these value: "red", "yellow", "green", "blue", "purple" 
 */
 void GrayscaleParser(LinkedStrList* arg)
 {
 
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+
+	const char* c;
+	bool hold = false;
+	ColorCanHold color;
+	if (ParseOption(arg, "-hold", c))
+	{
+		hold = true;
+		if (strcmp(c, "red") == 0)
+		{
+			color = ColorCanHold::RED;
+		}
+		else if (strcmp(c, "yellow") == 0)
+		{
+			color = ColorCanHold::YELLOW;
+		}
+		else if (strcmp(c, "green") == 0)
+		{
+			color = ColorCanHold::GREEN;
+		}
+		else if (strcmp(c, "blue") == 0)
+		{
+			color = ColorCanHold::BLUE;
+		}
+		else if (strcmp(c, "purple") == 0)
+		{
+			color = ColorCanHold::PURPLE;
+		}
+		else
+		{
+			throw std::string("Unknown color value \"") + c + "\"\n";
+		}
+	}
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Doing grayscale...\n";
+	if (hold)
+	{
+		holdAColor(bm, result, color);
+	}
+	else 
+	{
+		convertGrayScale(bm, result);
+	}
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 }

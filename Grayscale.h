@@ -12,14 +12,14 @@ struct HSVcolor
 	double H, S, V;
 };
 
-enum colorCanHold { RED, YELLOW, GREEN, BLUE, PURPLE };
+enum ColorCanHold { RED, YELLOW, GREEN, BLUE, PURPLE };
 
 void getGrayColor(Color color, Grayscale &pGray)
 {
 	pGray.I = (2 * color.R + 5 * color.G + color.B) / 8;
 }
 
-int setAGrayPixel(const Bitmap&bmp, int row, int col, Grayscale gray)
+int setAGrayPixel(const Bitmap &bmp, int row, int col, Grayscale gray)
 {
 	if (row < 0 || row >= bmp.height
 		|| col < 0 || col >= bmp.width)
@@ -182,7 +182,7 @@ Color convertHSVtoRGB(HSVcolor in)
 	return out;
 }
 
-void holdAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor)
+void holdAColor(const Bitmap &bmp, Bitmap &out, ColorCanHold clor)
 {
 	out.height = bmp.height;
 	out.width = bmp.width;
