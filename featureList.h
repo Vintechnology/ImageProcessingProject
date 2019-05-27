@@ -35,4 +35,4 @@ Bitmap ExposureAdjust(const Bitmap& bmp, double value);
 
 // Grayscale
 void convertGrayScale(const Bitmap &bmp, Bitmap &out);
-void holdAColor(const Bitmap &bmp, Bitmap &out, colorCanHold clor);
+void holdAColor(const Bitmap &bmp, Bitmap &out, ColorCanHold clor);

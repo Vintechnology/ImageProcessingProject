@@ -18,17 +18,17 @@ std::map<const char*, ArgumentParser, cmp_str> dictionary;
 void InitDictionary()
 {
 	// Basic
-	dictionary.insert(std::make_pair("rotate", RotateParser)); // usable
-	dictionary.insert(std::make_pair("flip", FlipParser));    // usable
-	dictionary.insert(std::make_pair("crop", CropParser));   // usable
-	dictionary.insert(std::make_pair("scale", ScaleParser));
-	dictionary.insert(std::make_pair("resize", ResizeParser));
+	dictionary.insert(std::make_pair("rotate", RotateParser));           // usable
+	dictionary.insert(std::make_pair("flip", FlipParser));               // usable
+	dictionary.insert(std::make_pair("crop", CropParser));               // usable
+	dictionary.insert(std::make_pair("scale", ScaleParser));             // usable
+	dictionary.insert(std::make_pair("resize", ResizeParser));           // usable
 	// Edge Detection
-	dictionary.insert(std::make_pair("sobel", SobelParser));    // usable
-	dictionary.insert(std::make_pair("robert", RobertParser));  // usable
-	dictionary.insert(std::make_pair("prewitt", PrewittParser));// usable
+	dictionary.insert(std::make_pair("sobel", SobelParser));             // usable
+	dictionary.insert(std::make_pair("robert", RobertParser));           // usable
+	dictionary.insert(std::make_pair("prewitt", PrewittParser));         // usable
 	// Blur
-	dictionary.insert(std::make_pair("blur", BlurParser)); // usable
+	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust
 	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser));
 	dictionary.insert(std::make_pair("nearest", NearestColourParser));
@@ -36,7 +36,7 @@ void InitDictionary()
 	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));
 	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser));
 	// Grayscale
-	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));
+	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));     // usable
 }
 
 void EvaluateCommand(char** arg, int length) {
