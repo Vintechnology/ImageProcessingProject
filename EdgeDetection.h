@@ -1,4 +1,5 @@
 #pragma once
+#include "Blur.h"
 #include "bitmap/Bitmap.h"
 #include <math.h>
 
@@ -297,4 +298,68 @@ Bitmap Kirsch(const Bitmap &in, Direction dir)
 		}
 	}
 	return out;
+}
+
+Bitmap LaplacianOfGaussian(Bitmap bmp)
+{
+	Bitmap result;
+	result.height = bmp.height;
+	result.width = bmp.width;
+	result.rowSize = ((3 * result.width + 3) / 4) * 4;
+	result.pixels = new unsigned char[result.height * result.rowSize];
+	//blur input image
+	bmp = GaussianBlur(bmp, 1, 2);
+
+	linalg::Matrix Gray, tempGray;
+	Gray.resize(bmp.height); tempGray.resize(bmp.height);
+	for (int i = 0; i < bmp.height; i++)
+	{
+		Gray[i].resize(bmp.width);
+		tempGray[i].resize(bmp.width);
+	}
+
+	linalg::Matrix kernel{ { 1, 1, 1 },
+	{ 1, -8, 1 },
+	{ 1, 1, 1 } };
+	//turn input image into grayscale
+	for (int i = 0; i < result.height; i++)
+	{
+		for (int j = 0; j < result.width; j++)
+		{
+			Color temp;
+			GetPixel(bmp, i, j, temp);
+			Gray[i][j] = 0.299 * temp.R + 0.587 * temp.G + 0.114 * temp.B;
+		}
+	}
+	//apply LoG kernel to input image
+	linalg::convolution2D(Gray, tempGray, kernel);
+
+	//zero crossing
+	int threshold = 20;
+	for (int i = 1; i < result.height - 1; i++)
+	{
+		for (int j = 1; j < result.width - 1; j++)
+		{
+			int min = 255;
+
+			min = (tempGray[i - 1][j] < min) ? tempGray[i - 1][j] : min;
+			min = (tempGray[i + 1][j] < min) ? tempGray[i + 1][j] : min;
+			min = (tempGray[i][j - 1] < min) ? tempGray[i][j - 1] : min;
+			min = (tempGray[i][j + 1] < min) ? tempGray[i][j + 1] : min;
+
+			if (tempGray[i][j] - min > threshold && tempGray[i][j] * min < 0) Gray[i][j] = 255;
+			else Gray[i][j] = 0;
+		}
+	}
+
+	for (int i = 0; i < result.height; i++)
+	{
+		for (int j = 0; j < result.width; j++)
+		{
+			Color temp;
+			temp.B = Gray[i][j]; temp.G = Gray[i][j]; temp.R = Gray[i][j];
+			SetPixel(result, i, j, temp);
+		}
+	}
+	return result;
 }
