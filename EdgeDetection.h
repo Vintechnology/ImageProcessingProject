@@ -2,9 +2,32 @@
 #include "bitmap/Bitmap.h"
 #include <math.h>
 
-Bitmap Sobel(const Bitmap &in)
+enum Direction
 {
+	north,
+	north_west,
+	west,
+	west_south,
+	south,
+	south_east,
+	east,
+	east_north
+};
+
+Bitmap CopySize(const Bitmap &in)
+{
+	// TODO: Copy height and width to out bimap
 	Bitmap out;
+	out.height = in.height;
+	out.width = in.width;
+	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
+	out.pixels = new unsigned char[out.rowSize*out.height];
+	return out;
+}
+
+Bitmap MakeSquareBitmap(const Bitmap &in)
+{
+	// TODO: Copy bitmap to a Square bitmap
 	Bitmap temp;
 	if (in.height > in.width)
 	{
@@ -48,11 +71,14 @@ Bitmap Sobel(const Bitmap &in)
 			SetPixel(temp, row, col, color);
 		}
 	}
+	return temp;
+}
 
-	out.height = in.height;
-	out.width = in.width;
-	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
-	out.pixels = new unsigned char[out.rowSize*out.height];
+Bitmap Sobel(const Bitmap &in)
+{
+	Bitmap out;
+	Bitmap temp = MakeSquareBitmap(in);
+	out = CopySize(in);
 
 	const int sobel_X[] = { -1, 0, +1, -2, 0, +2, -1, 0, +1 };
 	const int sobel_Y[] = { -1, -2, -1, 0, 0, 0, +1, +2, +1 };
@@ -60,9 +86,9 @@ Bitmap Sobel(const Bitmap &in)
 	double Gx;
 	double Gy;
 
-	for (int y = 1; y<temp.height - 1; y++)
+	for (int y = 1; y<temp.height - 1;y++)
 	{
-		for (int x = 1; x < temp.width - 1; x++)
+		for (int x = 1; x < temp.width - 1;x++)
 		{
 			Gx = 0;
 			Gy = 0;
@@ -85,10 +111,12 @@ Bitmap Sobel(const Bitmap &in)
 
 			double G = sqrt(Gx*Gx + Gy*Gy);
 			int valueOut = static_cast<int>(G);
+
 			if (valueOut > 255)
 				valueOut = 255;
 			if (valueOut < 0)
 				valueOut = 0;
+
 			Color colorOut;
 			colorOut.B = static_cast<unsigned char>(valueOut);
 			colorOut.G = static_cast<unsigned char>(valueOut);
@@ -103,90 +131,48 @@ Bitmap Sobel(const Bitmap &in)
 Bitmap Robert(const Bitmap &in)
 {
 	Bitmap out;
-	Bitmap temp;
-	if (in.height > in.width)
-	{
-		temp.height = in.height;
-		temp.width = temp.height;
-		temp.rowSize = ((temp.width * 3 + 3) / 4) * 4;
-		temp.pixels = new unsigned char[temp.rowSize*temp.height];
-		for (int row = 0; row < in.height; row++)
-		for (int col = 0; col < in.width; col++)
-		{
-			Color color;
-			GetPixel(in, row, col, color);
-			SetPixel(temp, row, col, color);
-		}
-	}
-	else if (in.height < in.width)
-	{
-		temp.height = in.width;
-		temp.width = in.width;
-		temp.rowSize = ((temp.width * 3 + 3) / 4) * 4;
-		temp.pixels = new unsigned char[temp.rowSize*temp.height];
-		for (int row = 0; row < in.height; row++)
-		for (int col = 0; col < in.width; col++)
-		{
-			Color color;
-			GetPixel(in, row, col, color);
-			SetPixel(temp, row, col, color);
-		}
-	}
-	else
-	{
-		temp.height = in.height;
-		temp.width = in.width;
-		temp.rowSize = ((temp.width * 3 + 3) / 4) * 4;
-		temp.pixels = new unsigned char[temp.rowSize*temp.height];
-		for (int row = 0; row < in.height; row++)
-		for (int col = 0; col < in.width; col++)
-		{
-			Color color;
-			GetPixel(in, row, col, color);
-			SetPixel(temp, row, col, color);
-		}
-	}
-
-	out.height = in.height;
-	out.width = in.width;
-	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
-	out.pixels = new unsigned char[out.rowSize*out.height];
+	Bitmap temp = MakeSquareBitmap(in);
+	out = CopySize(in);
 
 	const int robertX[] = { +1, 0, 0, -1 };
 	const int robertY[] = { 0, +1, -1, 0 };
 
 	for (int row = 1; row < temp.height - 1; row++)
-	for (int col = 1; col < temp.width - 1; col++)
 	{
-		double Gx = 0;
-		double Gy = 0;
-		for (int r = 0; r < 2; r++)
-		for (int c = 0; c < 2; c++)
+		for (int col = 1; col < temp.width - 1; col++)
 		{
-			int pixel_X = col + (r - 1);
-			int pixel_Y = row + (c - 1);
+			double Gx = 0;
+			double Gy = 0;
+			for (int r = 0; r < 2; r++)
+			for (int c = 0; c < 2; c++)
+			{
+				int pixel_X = col + (r - 1);
+				int pixel_Y = row + (c - 1);
 
-			Color color;
-			GetPixel(temp, pixel_X, pixel_Y, color);
-			int value = static_cast<int>(color.R);
+				Color color;
+				GetPixel(temp, pixel_X, pixel_Y, color);
+				int value = static_cast<int>(color.R);
 
-			int index = r * 2 + c;
-			Gx += robertX[index] * value;
-			Gy += robertY[index] * value;
+				int index = r * 2 + c;
+				Gx += robertX[index] * value;
+				Gy += robertY[index] * value;
+			}
+
+			double G = sqrt(Gx*Gx + Gy*Gy);
+			int color_out = static_cast<int>(G);
+
+			if (color_out>255)
+				color_out = 255;
+			if (color_out < 0)
+				color_out = 0;
+
+			Color colorout;
+			colorout.R = static_cast<unsigned char>(color_out);
+			colorout.G = static_cast<unsigned char>(color_out);
+			colorout.B = static_cast<unsigned char>(color_out);
+
+			SetPixel(out, col, row, colorout);
 		}
-
-		double G = sqrt(Gx*Gx + Gy*Gy);
-		int color_out = static_cast<int>(G);
-		if (color_out>255)
-			color_out = 255;
-		if (color_out < 0)
-			color_out = 0;
-		Color colorout;
-		colorout.R = static_cast<unsigned char>(color_out);
-		colorout.G = static_cast<unsigned char>(color_out);
-		colorout.B = static_cast<unsigned char>(color_out);
-
-		SetPixel(out, col, row, colorout);
 	}
 	return out;
 }
@@ -194,90 +180,121 @@ Bitmap Robert(const Bitmap &in)
 Bitmap Prewitt(const Bitmap &in)
 {
 	Bitmap out;
-	Bitmap temp;
-	if (in.height > in.width)
-	{
-		temp.height = in.height;
-		temp.width = temp.height;
-		temp.rowSize = ((temp.width * 3 + 3) / 4) * 4;
-		temp.pixels = new unsigned char[temp.rowSize*temp.height];
-		for (int row = 0; row < in.height; row++)
-		for (int col = 0; col < in.width; col++)
-		{
-			Color color;
-			GetPixel(in, row, col, color);
-			SetPixel(temp, row, col, color);
-		}
-	}
-	else if (in.height < in.width)
-	{
-		temp.height = in.width;
-		temp.width = in.width;
-		temp.rowSize = ((temp.width * 3 + 3) / 4) * 4;
-		temp.pixels = new unsigned char[temp.rowSize*temp.height];
-		for (int row = 0; row < in.height; row++)
-		for (int col = 0; col < in.width; col++)
-		{
-			Color color;
-			GetPixel(in, row, col, color);
-			SetPixel(temp, row, col, color);
-		}
-	}
-	else
-	{
-		temp.height = in.height;
-		temp.width = in.width;
-		temp.rowSize = ((temp.width * 3 + 3) / 4) * 4;
-		temp.pixels = new unsigned char[temp.rowSize*temp.height];
-		for (int row = 0; row < in.height; row++)
-		for (int col = 0; col < in.width; col++)
-		{
-			Color color;
-			GetPixel(in, row, col, color);
-			SetPixel(temp, row, col, color);
-		}
-	}
-
-	out.height = in.height;
-	out.width = in.width;
-	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
-	out.pixels = new unsigned char[out.rowSize*out.height];
+	Bitmap temp = MakeSquareBitmap(in);
+	out = CopySize(in);
 
 	const int prewittY[] = { -1, -1, -1, 0, 0, 0, +1, +1, +1 };
 	const int prewittX[] = { -1, 0, +1, -1, 0, +1, -1, 0, +1 };
 
 	for (int row = 1; row < temp.height - 1; row++)
-	for (int col = 1; col < temp.width - 1; col++)
 	{
-		double Gx = 0;
-		double Gy = 0;
-		for (int r = 0; r < 3; r++)
-		for (int c = 0; c < 3; c++)
+		for (int col = 1; col < temp.width - 1; col++)
 		{
-			int pixel_X = col + (r - 1);
-			int pixel_Y = row + (c - 1);
+			double Gx = 0;
+			double Gy = 0;
+			for (int r = 0; r < 3; r++)
+			for (int c = 0; c < 3; c++)
+			{
+				int pixel_X = col + (r - 1);
+				int pixel_Y = row + (c - 1);
 
-			Color color;
-			GetPixel(temp, pixel_X, pixel_Y, color);
-			int value = static_cast<int>(color.R);
+				Color color;
+				GetPixel(temp, pixel_X, pixel_Y, color);
+				int value = static_cast<int>(color.R);
 
-			int index = r * 3 + c;
-			Gx += prewittX[index] * value;
-			Gy += prewittY[index] * value;
+				int index = r * 3 + c;
+				Gx += prewittX[index] * value;
+				Gy += prewittY[index] * value;
+			}
+
+			double G = sqrt(Gx*Gx + Gy*Gy);
+			int color_out = static_cast<int>(G);
+
+			if (color_out>255)
+				color_out = 255;
+			if (color_out < 0)
+				color_out = 0;
+
+			Color colorout;
+			colorout.R = static_cast<unsigned char>(color_out);
+			colorout.G = static_cast<unsigned char>(color_out);
+			colorout.B = static_cast<unsigned char>(color_out);
+
+			SetPixel(out, col, row, colorout);
 		}
+	}
+	return out;
+}
 
-		double G = sqrt(Gx*Gx + Gy*Gy);
-		int color_out = static_cast<int>(G);
-		if (color_out>255)
-			color_out = 255;
-		if (color_out < 0)
-			color_out = 0;
-		Color colorout;
-		colorout.R = static_cast<unsigned char>(color_out);
-		colorout.G = static_cast<unsigned char>(color_out);
-		colorout.B = static_cast<unsigned char>(color_out);
+Bitmap Kirsch(const Bitmap &in, Direction dir)
+{
+	Bitmap out;
+	Bitmap temp = MakeSquareBitmap(in);
+	out = CopySize(in);
 
-		SetPixel(out, col, row, colorout);
+	const int North[] = { -3, -3, +5, -3, 0, 5, -3, -3, +5 };
+	const int North_West[]= { -3, 5, 5, -3, 0, 5, -3, -3, -3 };
+	const int West[] = { 5, 5, 5, -3, 0, -3, -3, -3, -3 };
+	const int West_South[] = { 5, 5, -3, 5, 0, -3, -3, -3, -3 };
+	const int South[] = { 5, -3, -3, 5, 0, -3, 5, -3, -3 };
+	const int South_East[] = { -3, -3, -3, 5, 0, -3, 5, 5, -3 };
+	const int East[] = { -3, -3, -3, -3, 0, -3, 5, 5, 5 };
+	const int East_North[] = { -3, -3, -3, -3, 0, 5, -3, 5, 5 };
+
+	for (int row = 1; row < temp.height - 1; row++)
+	{
+		for (int col = 1; col < temp.width - 1; col++)
+		{
+			double G[8];
+			for (int i = 0; i < 8; i++)
+			{
+				G[i] = 0;
+			}
+
+			for (int r = 0; r < 3; r++)
+			for (int c = 0; c < 3; c++)
+			{
+				int pixel_X = col + (r - 1);
+				int pixel_Y = row + (c - 1);
+
+				Color color;
+				GetPixel(temp, pixel_X, pixel_Y, color);
+				int value = static_cast<int>(color.R);
+
+				int index = r * 3 + c;
+
+				if (dir == north)
+					G[0] += North[index] * value;
+				if (dir == north_west)
+					G[1] += North_West[index] * value;
+				if (dir == west)
+					G[2] += West[index] * value;
+				if (dir == west_south)
+					G[3] += West_South[index] * value;
+				if (dir == south)
+					G[4] += South[index] * value;
+				if (dir == south_east)
+					G[5] += South_East[index] * value;
+				if (dir == east)
+					G[6] += East[index] * value;
+				if (dir == east_north)
+					G[7] += East_North[index] * value;
+			}
+			double g = sqrt(G[0] * G[0] + G[1] * G[1] + G[2] * G[2] + G[3] * G[3] + G[4] * G[4] + G[5] * G[5] + G[6] * G[6] + G[7] * G[7]);
+			int color_out = static_cast<int>(g);
+
+			if (color_out>255)
+				color_out = 255;
+			if (color_out < 0)
+				color_out = 0;
+
+			Color colorout;
+			colorout.R = static_cast<unsigned char>(color_out);
+			colorout.G = static_cast<unsigned char>(color_out);
+			colorout.B = static_cast<unsigned char>(color_out);
+
+			SetPixel(out, col, row, colorout);
+		}
 	}
 	return out;
 }
