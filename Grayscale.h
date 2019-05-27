@@ -19,62 +19,36 @@ void getGrayColor(Color color, Grayscale &pGray)
 	pGray.I = (2 * color.R + 5 * color.G + color.B) / 8;
 }
 
-int setAGrayPixel(const Bitmap &bmp, int row, int col, Grayscale gray)
+int setAGrayPixel(const Bitmap &in, int row, int col, Grayscale gray)
 {
-	if (row < 0 || row >= bmp.height
-		|| col < 0 || col >= bmp.width)
+	if (row < 0 || row >= in.height
+		|| col < 0 || col >= in.width)
 		return 0;
 
 	// color: B, G, R
-	int offset = (bmp.height - 1 - row)*bmp.rowSize + col * 3;
-	bmp.pixels[offset] = gray.I;
-	bmp.pixels[offset + 1] = gray.I;
-	bmp.pixels[offset + 2] = gray.I;
+	int offset = (in.height - 1 - row)*in.rowSize + col * 3;
+	in.pixels[offset] = gray.I;
+	in.pixels[offset + 1] = gray.I;
+	in.pixels[offset + 2] = gray.I;
 }
 
-void convertGrayScale(const Bitmap &bmp, Bitmap &out)
+void convertGrayScale(const Bitmap &in, Bitmap &out)
 {
-	out.height = bmp.height;
-	out.width = bmp.width;
+	out.height = in.height;
+	out.width = in.width;
 	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
 	out.pixels = new unsigned char[out.rowSize*out.height];
 
-	for (int row = 0; row < bmp.height; row++)
+	for (int row = 0; row < in.height; row++)
 	{
-		for (int col = 0; col < bmp.width; col++)
+		for (int col = 0; col < in.width; col++)
 		{
-			Color temp;
+			Color RGB;
 			Grayscale gray;
-			GetPixel(bmp, row, col, temp);
-			getGrayColor(temp, gray);
+
+			GetPixel(in, row, col, RGB);
+			getGrayColor(RGB, gray);
 			setAGrayPixel(out, row, col, gray);
-		}
-	}
-}
-
-void holdRedColor(const Bitmap &bmp, Bitmap &out)
-{
-	out.height = bmp.height;
-	out.width = bmp.width;
-	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
-	out.pixels = new unsigned char[out.rowSize*out.height];
-
-	for (int row = 0; row < bmp.height; row++)
-	{
-		for (int col = 0; col < bmp.width; col++)
-		{
-			Color temp;
-			Grayscale gray;
-			GetPixel(bmp, row, col, temp);
-			if (temp.R >= 180 && temp.G <= 95 && temp.B <= 95)
-			{
-				SetPixel(out, row, col, temp);
-			}
-			else
-			{
-				getGrayColor(temp, gray);
-				setAGrayPixel(out, row, col, gray);
-			}
 		}
 	}
 }
@@ -182,32 +156,36 @@ Color convertHSVtoRGB(HSVcolor in)
 	return out;
 }
 
-void holdAColor(const Bitmap &bmp, Bitmap &out, ColorCanHold clor)
+void holdAColor(const Bitmap &in, Bitmap &out, ColorCanHold colorRemain)
 {
-	out.height = bmp.height;
-	out.width = bmp.width;
+	out.height = in.height;
+	out.width = in.width;
 	out.rowSize = ((out.width * 3 + 3) / 4) * 4;
 	out.pixels = new unsigned char[out.rowSize*out.height];
+	
 	int delta = 30;
-
-	int temp3 = clor * 60;
+	int totalColorRemain = colorRemain * 60;
 	double minCos = cos(delta / (180 * PI));
-	for (int row = 0; row < bmp.height; row++)
+
+	for (int row = 0; row < in.height; row++)
 	{
-		for (int col = 0; col < bmp.width; col++)
+		for (int col = 0; col < in.width; col++)
 		{
-			Color temp;
-			HSVcolor HSVtemp;
+			Color RGB;
+			HSVcolor HSV;
 			Grayscale gray;
-			GetPixel(bmp, row, col, temp);
-			HSVtemp = convertRGBtoHSV(temp);
-			if (cos(((int)HSVtemp.H - temp3) / (180 * PI)) > minCos)
+			
+			GetPixel(in, row, col, RGB);
+			
+			HSV = convertRGBtoHSV(RGB);
+			
+			if (cos(((int)HSV.H - totalColorRemain) / (180 * PI)) > minCos)
 			{
-				SetPixel(out, row, col, temp);
+				SetPixel(out, row, col, RGB);
 			}
 			else
 			{
-				getGrayColor(temp, gray);
+				getGrayColor(RGB, gray);
 				setAGrayPixel(out, row, col, gray);
 			}
 		}
