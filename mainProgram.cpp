@@ -17,6 +17,11 @@ std::map<const char*, ArgumentParser, cmp_str> dictionary;
 
 void InitDictionary()
 {
+	// Utility
+	//dictionary.insert(std::make_pair("help", NULL));
+	//dictionary.insert(std::make_pair("-version", NULL));
+	//dictionary.insert(std::make_pair("-tutor", NULL));
+	//dictionary.insert(std::make_pair("list", NULL));
 	// Basic
 	dictionary.insert(std::make_pair("rotate", RotateParser));           // usable
 	dictionary.insert(std::make_pair("flip", FlipParser));               // usable
