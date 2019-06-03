@@ -17,6 +17,18 @@ struct cmp_str
 };
 std::map<const char*, ArgumentParser, cmp_str> dictionary;
 
+
+void PrintHeader()
+{
+	std::cout << " _____" << std::endl;
+	std::cout << "|_   _|________  ____  ___  |  Command structure : impr + <function name> + <parameter value>" << std::endl;
+	std::cout << "  | | |  _   _ \\|  _ \\|  _| |  Type \"impr list\" to see the all function" << std::endl;
+	std::cout << " _| |_| | | | | | |_) | |   |  For help, type \"impr help + <function name>\"" << std::endl;
+	std::cout << "|_____|_| |_| |_|  __/|_|   |" << std::endl;
+	std::cout << "                | |         |" << std::endl;
+	std::cout << "                |_|         |  Version " << VERSION << std::endl;
+}
+
 void GetHelp(const char* command)
 {
 	std::string output ="";
@@ -33,6 +45,7 @@ void GetHelp(const char* command)
 		getline(helpInput, output);
 	}
 	getline(helpInput, output, '#');
+	helpInput.close();
 	std::cout << output;
 }
 
@@ -95,17 +108,21 @@ void EvaluateCommand(char** arg, int length) {
 
 void handlingCommand(char** arg, int length) 
 {
-	if (strcmp(arg[1], "list") == 0)
+	if (length == 1)
 	{
-		std::cout << "BASIC: rotate    flip    crop    scale    resize\n" << std::endl;
-		std::cout << "EDGE DETECTION: sobel    robert    prewitt    kirsch    laplacian\n" << std::endl;
-		std::cout << "BLUR: blur\n" << std::endl;
-		std::cout << "COLOR ADJUST: contrast    nearest    levels    diffuse    exposure\n" << std::endl;
-		std::cout << "GRAYSCALE: grayscale\n" << std::endl;
+		PrintHeader();
+	}
+	else if (strcmp(arg[1], "list") == 0)
+	{
+		std::cout << "--BASIC--\nrotate    flip    crop    scale    resize\n" << std::endl;
+		std::cout << "--EDGE DETECTION--\nsobel    robert    prewitt    kirsch    laplacian\n" << std::endl;
+		std::cout << "--BLUR--\nblur\n" << std::endl;
+		std::cout << "--COLOR ADJUST--\ncontrast    nearest    levels    diffuse    exposure\n" << std::endl;
+		std::cout << "--GRAYSCALE--\ngrayscale\n" << std::endl;
 	}
 	else if (strcmp(arg[1], "-version") == 0)
 	{
-		std::cout << "impr - version 0.0.1" << std::endl;
+		std::cout << "impr - version " << VERSION << std::endl;
 	}
 	else
 	{
@@ -125,18 +142,7 @@ void handlingCommand(char** arg, int length)
 	}
 }
 
-void PrintHeader()
-{
-	std::cout << " _____" << std::endl;
-	std::cout << "|_   _|________  ____  ___  |  Command structure : impr + <function name> + <parameter value>" << std::endl;
-	std::cout << "  | | |  _   _ \\|  _ \\|  _| |  Type \"impr list\" to see the all function" << std::endl;
-	std::cout << " _| |_| | | | | | |_) | |   |  For help, type \"impr help + <function name>\"" << std::endl;
-	std::cout << "|_____|_| |_| |_|  __/|_|   |" << std::endl;
-	std::cout << "                | |         |" << std::endl;
-	std::cout << "                |_|         |  Version " << VERSION << std::endl;
-}
-
-void main(int argc, char* argv[]) 
+int main(int argc, char* argv[]) 
 {
 	try {
 		InitDictionary();
@@ -146,5 +152,6 @@ void main(int argc, char* argv[])
 		std::cout << str;
 	}
 
+	return 0;
 }
 
