@@ -61,8 +61,8 @@ void InitDictionary()
 	dictionary.insert(std::make_pair("sobel", SobelParser));             // usable
 	dictionary.insert(std::make_pair("robert", RobertParser));           // usable
 	dictionary.insert(std::make_pair("prewitt", PrewittParser));         // usable
-	dictionary.insert(std::make_pair("laplaction", LaplacianOfGaussianParser));
-	dictionary.insert(std::make_pair("kirsch", KirschParser));
+	dictionary.insert(std::make_pair("laplaction", LaplacianOfGaussianParser)); //usable
+	dictionary.insert(std::make_pair("kirsch", KirschParser));			//usable
 	// Blur
 	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust

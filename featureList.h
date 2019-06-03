@@ -21,7 +21,7 @@ Bitmap Resize(const Bitmap &in, double factor);
 Bitmap MediumBlur(const Bitmap &bmp, int R);
 Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma);
 
-// Edge Detection
+// Edge Detection: DONE
 Bitmap Sobel(const Bitmap &in);
 Bitmap Robert(const Bitmap &in);
 Bitmap Prewitt(const Bitmap &in);
@@ -34,6 +34,6 @@ Bitmap LevelsAdjust(const Bitmap& bmp, unsigned char input[], unsigned char outp
 Bitmap ErrorDiffuse(const Bitmap& bmp, Color colours[], int colorCount);
 Bitmap ExposureAdjust(const Bitmap& bmp, double value);
 
-// Grayscale
+// Grayscale: DONE
 void convertGrayScale(const Bitmap &bmp, Bitmap &out);
 void holdAColor(const Bitmap &bmp, Bitmap &out, ColorCanHold clor);
