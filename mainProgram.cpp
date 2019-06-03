@@ -50,7 +50,7 @@ void HelpParser(LinkedStrList* arg)
 void InitDictionary()
 {
 	// Utility
-	dictionary.insert(std::make_pair("help", HelpParser));
+	dictionary.insert(std::make_pair("help", HelpParser));				 //usable
 	// Basic
 	dictionary.insert(std::make_pair("rotate", RotateParser));           // usable
 	dictionary.insert(std::make_pair("flip", FlipParser));               // usable
@@ -61,6 +61,8 @@ void InitDictionary()
 	dictionary.insert(std::make_pair("sobel", SobelParser));             // usable
 	dictionary.insert(std::make_pair("robert", RobertParser));           // usable
 	dictionary.insert(std::make_pair("prewitt", PrewittParser));         // usable
+	dictionary.insert(std::make_pair("laplaction", LaplacianOfGaussianParser));
+	dictionary.insert(std::make_pair("kirsch", KirschParser));
 	// Blur
 	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust

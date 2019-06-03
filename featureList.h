@@ -21,11 +21,12 @@ Bitmap Resize(const Bitmap &in, double factor);
 Bitmap MediumBlur(const Bitmap &bmp, int R);
 Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma);
 
-// Edge Detection: DONE
+// Edge Detection
 Bitmap Sobel(const Bitmap &in);
 Bitmap Robert(const Bitmap &in);
 Bitmap Prewitt(const Bitmap &in);
-
+Bitmap LaplacianOfGaussian(Bitmap bmp);
+Bitmap Kirsch(const Bitmap &in, Direction dir);
 // Color Adjustment
 Bitmap ContrastAdjust(const Bitmap& bmp, int value);
 Bitmap NearestColour(const Bitmap& bmp, Color colours[], int colorCount);
