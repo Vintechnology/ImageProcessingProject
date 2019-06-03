@@ -64,27 +64,26 @@ void EvaluateCommand(char** arg, int length) {
 	{
 		throw std::string("No command given.\n");
 	}
-	if (dictionary.count(arg[1]) == 0 && strcmp(arg[1],"help") !=0 && strcmp(arg[1],"-version") != 0) 
+	if (dictionary.count(arg[1]) == 0) 
 	{
 		throw std::string("No such command \"") + arg[1] + "\".\n";
 	}
 
 	if (length == 2)
 	{
-		throw std::string("No path given. Please specify the filename of your image.\n");
+		throw std::string("No value given. Please specify the filename of your image.\n");
 	}
 }
 
 void handlingCommand(char** arg, int length) 
 {
-	EvaluateCommand(arg, length); 
 	if (strcmp(arg[1], "list") == 0)
 	{
-		std::cout << "--BASIC--\nrotate\tflip\tcrop\tscale\tresize" << std::endl;
-		std::cout << "--EDGE DETECTION--\nsobel\trobert\tprewitt\tkirsch\tlaplacian" << std::endl;
-		std::cout << "--BLUR--\nblur" << std::endl;
-		std::cout << "--COLOR ADJUST--\ncontrast\tnearest\tlevels\tdiffuse\texposure" << std::endl;
-		std::cout << "--GRAYSCALE--\ngrayscale" << std::endl;
+		std::cout << "BASIC: rotate    flip    crop    scale    resize\n" << std::endl;
+		std::cout << "EDGE DETECTION: sobel    robert    prewitt    kirsch    laplacian\n" << std::endl;
+		std::cout << "BLUR: blur\n" << std::endl;
+		std::cout << "COLOR ADJUST: contrast    nearest    levels    diffuse    exposure\n" << std::endl;
+		std::cout << "GRAYSCALE: grayscale\n" << std::endl;
 	}
 	else if (strcmp(arg[1], "-version") == 0)
 	{
@@ -92,6 +91,8 @@ void handlingCommand(char** arg, int length)
 	}
 	else
 	{
+
+		EvaluateCommand(arg, length);
 		ArgumentParser parseFunc = dictionary.at(arg[1]);
 
 		LinkedStrList *argList = new LinkedStrList;
