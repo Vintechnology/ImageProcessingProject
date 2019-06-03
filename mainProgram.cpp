@@ -6,6 +6,8 @@
 #include "util/LinkedList.h"
 #include "Parsers.h"
 
+std::string VERSION = "0.0.1";
+
 struct cmp_str
 {
 	bool operator()(char const *a, char const *b) const
@@ -120,6 +122,17 @@ void handlingCommand(char** arg, int length)
 		parseFunc(argList);
 		LinkedList::Delete(argList);
 	}
+}
+
+void PrintHeader()
+{
+	std::cout << " _____" << std::endl;
+	std::cout << "|_   _|________  ____  ___  |  Command structure : impr + <function name> + <parameter value>" << std::endl;
+	std::cout << "  | | |  _   _ \\|  _ \\|  _| |  Type \"impr list\" to see the all function" << std::endl;
+	std::cout << " _| |_| | | | | | |_) | |   |  For help, type \"impr help + <function name>\"" << std::endl;
+	std::cout << "|_____|_| |_| |_|  __/|_|   |" << std::endl;
+	std::cout << "                | |         |" << std::endl;
+	std::cout << "                |_|         |  Version " << VERSION << std::endl;
 }
 
 void main(int argc, char* argv[]) 
