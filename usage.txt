@@ -64,6 +64,18 @@ Use case:
 	<app-name> prewitt <filename> [args..]
 	-o <string> : output image name (default = "out.bmp")
 
+#laplaction
+Use case:
+	<app-name> laplaction <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+#kirsch
+Use case:
+	<app-name> kirsch <filename> [args..]
+	o <string> : output image name (default = "out.bmp")
+	-dir <string> : choose direction to detect edge.
+	  			Can choose "north" "north_west" "west" "west_south" "south" "south_east" "east" "east_north" 
+
 #blur
 Use case:
 	<app-name> blur <filename> [args..]
@@ -74,6 +86,19 @@ Use case:
 		-sigma <double> : blur variance (default = 2.0)
 
 	-r <integer> : blur radius (default = 1)
+
+#contrast
+Use case:
+	<app-name> contrast <filename> [args..]
+	-o : output image name (default = "out.bmp")
+	
+	-v <interger> : contrast value, from -255 to 255. (Defaut = 0 / No change)
+
+#exposure
+Use case:
+	<app-name> exposure <filename> [args..]
+	-o : output image name (default = "out.bmp")
+	-v <double> : adjust value (defaut = 0)
 
 #grayscale
 Use case:

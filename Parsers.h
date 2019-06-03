@@ -416,6 +416,94 @@ void PrewittParser(LinkedStrList* arg)
 	DisposeBitmap(result);
 }
 
+/*
+	Use case:
+	<app-name> laplaction <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+*/
+void LaplacianOfGaussianParser(LinkedStrList* arg)
+{
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char * outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+	CheckLeftovers(arg);
+
+	std::cout << "Doing Laplaction edge detection..." << std::endl;
+	Bitmap result = LaplacianOfGaussian(bm);
+	std::cout << "Completed!" << std::endl;
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
+}
+/*
+	Use case:
+	<app-name> kirsch <filename> [args..]
+	o <string> : output image name (default = "out.bmp")
+	-dir <string> : choose direction to detect edge.
+	  			Can choose "north" "north_west" "west" "west_south" "south" "south_east" "east" "east_north" 
+*/
+void KirschParser(LinkedStrList* arg)
+{
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char * outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+	const char *temp;
+	Direction dir;
+	if (ParseOption(arg, "-dir", temp))
+	{
+		if (strcmp(temp, "north") == 0)
+		{
+			dir = Direction::north;
+		}
+		else if (strcmp(temp, "north_west") == 0)
+		{
+			dir = Direction::north_west;
+		}
+		else if (strcmp(temp, "west") == 0)
+		{
+			dir = Direction::west;
+		}
+		else if (strcmp(temp, "west_south") == 0)
+		{
+			dir = Direction::west_south;
+		}
+		else if (strcmp(temp, "south") == 0)
+		{
+			dir = Direction::south;
+		}
+		else if (strcmp(temp, "south_east") == 0)
+		{
+			dir = Direction::south_east;
+		}
+		else if (strcmp(temp, "east") == 0 )
+		{
+			dir = Direction::east;
+		}
+		else if (strcmp(temp, "east_north") == 0)
+		{
+			dir = Direction::east_north;
+		}
+
+		else
+		{
+			throw std::string("Invalid direction ") + temp + ".\n" ;
+		}
+	}
+	else
+	{
+		throw std::string("Unknow command\n");
+	}
+	CheckLeftovers(arg);
+
+	std::cout << "Doing Krisch edge detection..." << std::endl;
+	Bitmap result = Kirsch(bm,dir);
+	std::cout << "Completed!" << std::endl;
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
+}
 // -- BLURRING --
 
 /*
@@ -474,6 +562,8 @@ void BlurParser(LinkedStrList* arg)
 	Use case:
 	<app-name> contrast <filename> [args..]
 	-o : output image name (default = "out.bmp")
+
+	-v <interger> : contrast value, from -255 to 255. (Defaut = 0 / No change)
 */
 void ContrastAdjustParser(LinkedStrList* arg)
 {
@@ -481,12 +571,24 @@ void ContrastAdjustParser(LinkedStrList* arg)
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
-
-
+	
+	const char* temp;
+	int value = 1;
+	
+	if (ParseOption(arg,"-v", temp))
+	{
+		value = ParseInt(temp);
+	}
+	
+	if (value > 255 || value < -255)
+		throw std::string("Adjust value is out of range [-255,255] \n");
+	
 	CheckLeftovers(arg);
 
+	std::cout << "Contrast Adjusting ...\n" << std::endl;
+	
 	Bitmap result;
-	std::cout << "Cropping...\n";
+	result = ContrastAdjust(bm, value);
 
 	std::cout << "Complete!" << std::endl;
 
@@ -582,6 +684,7 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 	Use case:
 	<app-name> exposure <filename> [args..]
 	-o : output image name (default = "out.bmp")
+	-v <double> : adjust value (defaut = 0)
 */
 void ExposureAdjustParser(LinkedStrList* arg)
 {
@@ -590,11 +693,19 @@ void ExposureAdjustParser(LinkedStrList* arg)
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
 
+	const char* temp;
+	double value = 0;
+	if (ParseOption(arg, "-v", temp))
+	{
+		value = ParseDouble(temp);
+	}
 
 	CheckLeftovers(arg);
 
 	Bitmap result;
-	std::cout << "Cropping...\n";
+	std::cout << "Adjusting...\n";
+
+	result = ExposureAdjust(bm, value);
 
 	std::cout << "Complete!" << std::endl;
 
@@ -653,7 +764,7 @@ void GrayscaleParser(LinkedStrList* arg)
 			throw std::string("Unknown color value \"") + c + "\"\n";
 		}
 	}
-
+	
 	CheckLeftovers(arg);
 
 	Bitmap result;

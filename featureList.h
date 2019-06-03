@@ -25,7 +25,8 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma);
 Bitmap Sobel(const Bitmap &in);
 Bitmap Robert(const Bitmap &in);
 Bitmap Prewitt(const Bitmap &in);
-
+Bitmap LaplacianOfGaussian(Bitmap bmp);
+Bitmap Kirsch(const Bitmap &in, Direction dir);
 // Color Adjustment
 Bitmap ContrastAdjust(const Bitmap& bmp, int value);
 Bitmap NearestColour(const Bitmap& bmp, Color colours[], int colorCount);
@@ -33,6 +34,6 @@ Bitmap LevelsAdjust(const Bitmap& bmp, unsigned char input[], unsigned char outp
 Bitmap ErrorDiffuse(const Bitmap& bmp, Color colours[], int colorCount);
 Bitmap ExposureAdjust(const Bitmap& bmp, double value);
 
-// Grayscale
+// Grayscale: DONE
 void convertGrayScale(const Bitmap &bmp, Bitmap &out);
 void holdAColor(const Bitmap &bmp, Bitmap &out, ColorCanHold clor);

@@ -6,6 +6,8 @@
 #include "util/LinkedList.h"
 #include "Parsers.h"
 
+std::string VERSION = "0.0.1";
+
 struct cmp_str
 {
 	bool operator()(char const *a, char const *b) const
@@ -17,7 +19,21 @@ std::map<const char*, ArgumentParser, cmp_str> dictionary;
 
 void GetHelp(const char* command)
 {
-	//TODO
+	std::string output ="";
+	std::string check;
+	check.append(command);
+	check = "#" + check;
+	
+	std::ifstream helpInput;
+	helpInput.open("usage.txt");
+	if (helpInput.fail())
+		throw std::string("Unable to find usage.txt in your computer");
+	while (strcmp(output.c_str(), check.c_str()) != 0)
+	{
+		getline(helpInput, output);
+	}
+	getline(helpInput, output, '#');
+	std::cout << output;
 }
 
 void HelpParser(LinkedStrList* arg)
@@ -36,7 +52,7 @@ void HelpParser(LinkedStrList* arg)
 void InitDictionary()
 {
 	// Utility
-	dictionary.insert(std::make_pair("help", HelpParser));
+	dictionary.insert(std::make_pair("help", HelpParser));				 //usable
 	// Basic
 	dictionary.insert(std::make_pair("rotate", RotateParser));           // usable
 	dictionary.insert(std::make_pair("flip", FlipParser));               // usable
@@ -47,14 +63,16 @@ void InitDictionary()
 	dictionary.insert(std::make_pair("sobel", SobelParser));             // usable
 	dictionary.insert(std::make_pair("robert", RobertParser));           // usable
 	dictionary.insert(std::make_pair("prewitt", PrewittParser));         // usable
+	dictionary.insert(std::make_pair("laplaction", LaplacianOfGaussianParser)); //usable
+	dictionary.insert(std::make_pair("kirsch", KirschParser));			//usable
 	// Blur
 	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust
-	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser));
+	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser)); //usable
 	dictionary.insert(std::make_pair("nearest", NearestColourParser));
 	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));
 	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));
-	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser));
+	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser)); //usable
 	// Grayscale
 	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));     // usable
 }
@@ -105,6 +123,17 @@ void handlingCommand(char** arg, int length)
 		parseFunc(argList);
 		LinkedList::Delete(argList);
 	}
+}
+
+void PrintHeader()
+{
+	std::cout << " _____" << std::endl;
+	std::cout << "|_   _|________  ____  ___  |  Command structure : impr + <function name> + <parameter value>" << std::endl;
+	std::cout << "  | | |  _   _ \\|  _ \\|  _| |  Type \"impr list\" to see the all function" << std::endl;
+	std::cout << " _| |_| | | | | | |_) | |   |  For help, type \"impr help + <function name>\"" << std::endl;
+	std::cout << "|_____|_| |_| |_|  __/|_|   |" << std::endl;
+	std::cout << "                | |         |" << std::endl;
+	std::cout << "                |_|         |  Version " << VERSION << std::endl;
 }
 
 void main(int argc, char* argv[]) 
