@@ -17,7 +17,21 @@ std::map<const char*, ArgumentParser, cmp_str> dictionary;
 
 void GetHelp(const char* command)
 {
-	//TODO
+	std::string output ="";
+	std::string check;
+	check.append(command);
+	check = "#" + check;
+	
+	std::ifstream helpInput;
+	helpInput.open("usage.txt");
+	if (helpInput.fail())
+		throw std::string("Unable to find usage.txt in your computer");
+	while (strcmp(output.c_str(), check.c_str()) != 0)
+	{
+		getline(helpInput, output);
+	}
+	getline(helpInput, output, '#');
+	std::cout << output;
 }
 
 void HelpParser(LinkedStrList* arg)
@@ -50,11 +64,11 @@ void InitDictionary()
 	// Blur
 	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust
-	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser));
+	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser)); //usable
 	dictionary.insert(std::make_pair("nearest", NearestColourParser));
 	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));
 	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));
-	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser));
+	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser)); //usable
 	// Grayscale
 	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));     // usable
 }

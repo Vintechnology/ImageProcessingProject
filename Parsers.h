@@ -474,6 +474,8 @@ void BlurParser(LinkedStrList* arg)
 	Use case:
 	<app-name> contrast <filename> [args..]
 	-o : output image name (default = "out.bmp")
+
+	-v <interger> : contrast value, from -255 to 255. (Defaut = 0 / No change)
 */
 void ContrastAdjustParser(LinkedStrList* arg)
 {
@@ -481,12 +483,24 @@ void ContrastAdjustParser(LinkedStrList* arg)
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
-
-
+	
+	const char* temp;
+	int value = 1;
+	
+	if (ParseOption(arg,"-v", temp))
+	{
+		value = ParseInt(temp);
+	}
+	
+	if (value > 255 || value < -255)
+		throw std::string("Adjust value is out of range [-255,255] \n");
+	
 	CheckLeftovers(arg);
 
+	std::cout << "Contrast Adjusting ...\n" << std::endl;
+	
 	Bitmap result;
-	std::cout << "Cropping...\n";
+	result = ContrastAdjust(bm, value);
 
 	std::cout << "Complete!" << std::endl;
 
@@ -582,6 +596,7 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 	Use case:
 	<app-name> exposure <filename> [args..]
 	-o : output image name (default = "out.bmp")
+	-v <double> : adjust value (defaut = 0)
 */
 void ExposureAdjustParser(LinkedStrList* arg)
 {
@@ -590,11 +605,19 @@ void ExposureAdjustParser(LinkedStrList* arg)
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
 
+	const char* temp;
+	double value = 0;
+	if (ParseOption(arg, "-v", temp))
+	{
+		value = ParseDouble(temp);
+	}
 
 	CheckLeftovers(arg);
 
 	Bitmap result;
-	std::cout << "Cropping...\n";
+	std::cout << "Adjusting...\n";
+
+	result = ExposureAdjust(bm, value);
 
 	std::cout << "Complete!" << std::endl;
 
