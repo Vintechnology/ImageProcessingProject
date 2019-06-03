@@ -1,0 +1,84 @@
+#rotate
+Use case:
+	<app-name> rotate <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+	-degree <integer>: integer of degree to turn the image.(default = 0) 
+			+ positive : turn left
+			+ negative : turn right
+	
+	-l : rotate 90 degree to left
+
+	-r : rotate 90 degree to right
+
+	-d : rotate 180 degree 
+
+#flip
+Use case:
+	<app-name> flip <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+	-h : flip horizontal
+
+	-v : flip vertical
+
+#crop
+Use case:
+	<app-name> crop <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+	Define top, bottom, left, right of a box which you want to crop
+	-t <double> : a number between 0.0 (downmost) and 1.0 (topmost). (default = 1.0)
+	-b <double> : a number between 0.0 (downmost) and 1.0 (topmost). (default = 0.0)
+
+	-r <double> : a number between 0.0 (leftmost) and 1.0 (rightmost). (default = 1.0)
+	-l <double> : a number between 0.0 (leftmost) and 1.0 (rightmost). (default = 0.0)
+
+#scale
+Use case:
+	<app-name> scale <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+	-f <double> : factor
+
+#resize
+Use case:
+	<app-name> resize <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+	-w <integer> : resize width. (default = original width)
+	-h <integer> : resize height. (default = original height)
+
+#sobel
+Use case:
+	<app-name> sobel <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+#robert
+Use case:
+	<app-name> robert <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+#prewitt
+Use case:
+	<app-name> prewitt <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+
+#blur
+Use case:
+	<app-name> blur <filename> [args..]
+	-o <string> : output image name (default = "out.bmp")
+	-m : medium blur (default option)
+
+	-g : gaussian blur
+		-sigma <double> : blur variance (default = 2.0)
+
+	-r <integer> : blur radius (default = 1)
+
+#grayscale
+Use case:
+	<app-name> grayscale <filename> [args..]
+	-o : output image name (default = "out.bmp")
+
+	-hold <string> : don't grayscale a color.
+					 Any one of these value: "red", "yellow", "green", "blue", "purple"

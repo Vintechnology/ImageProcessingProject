@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <fstream>
+#include <sstream>
 #include "util/LinkedList.h"
 #include "Parsers.h"
 
@@ -13,15 +15,28 @@ struct cmp_str
 };
 std::map<const char*, ArgumentParser, cmp_str> dictionary;
 
+void GetHelp(const char* command)
+{
+	//TODO
+}
 
+void HelpParser(LinkedStrList* arg)
+{
+	while (arg->head != nullptr)
+	{
+		const char* command = LinkedList::Get(arg, arg->head);
+		if (dictionary.count(command) == 0)
+		{
+			throw std::string("No such feature \"") + LinkedList::Get(arg, arg->head) + "\"\n";
+		}
+		GetHelp(command);
+	}
+}
 
 void InitDictionary()
 {
 	// Utility
-	//dictionary.insert(std::make_pair("help", NULL));
-	//dictionary.insert(std::make_pair("-version", NULL));
-	//dictionary.insert(std::make_pair("-tutor", NULL));
-	//dictionary.insert(std::make_pair("list", NULL));
+	dictionary.insert(std::make_pair("help", HelpParser));
 	// Basic
 	dictionary.insert(std::make_pair("rotate", RotateParser));           // usable
 	dictionary.insert(std::make_pair("flip", FlipParser));               // usable
@@ -49,7 +64,7 @@ void EvaluateCommand(char** arg, int length) {
 	{
 		throw std::string("No command given.\n");
 	}
-	if (dictionary.count(arg[1]) == 0) 
+	if (dictionary.count(arg[1]) == 0 && strcmp(arg[1],"help") !=0 && strcmp(arg[1],"-version") != 0) 
 	{
 		throw std::string("No such command \"") + arg[1] + "\".\n";
 	}
@@ -63,17 +78,32 @@ void EvaluateCommand(char** arg, int length) {
 void handlingCommand(char** arg, int length) 
 {
 	EvaluateCommand(arg, length); 
-	ArgumentParser parseFunc = dictionary.at(arg[1]);
-
-	LinkedStrList *argList = new LinkedStrList;
-	LinkedList::Init(argList);
-
-	for (int i = 2; i < length; i++) {
-		LinkedList::AddTail(argList, arg[i]);
+	if (strcmp(arg[1], "list") == 0)
+	{
+		std::cout << "--BASIC--\nrotate\tflip\tcrop\tscale\tresize" << std::endl;
+		std::cout << "--EDGE DETECTION--\nsobel\trobert\tprewitt\tkirsch\tlaplacian" << std::endl;
+		std::cout << "--BLUR--\nblur" << std::endl;
+		std::cout << "--COLOR ADJUST--\ncontrast\tnearest\tlevels\tdiffuse\texposure" << std::endl;
+		std::cout << "--GRAYSCALE--\ngrayscale" << std::endl;
 	}
+	else if (strcmp(arg[1], "-version") == 0)
+	{
+		std::cout << "impr - version 0.0.1" << std::endl;
+	}
+	else
+	{
+		ArgumentParser parseFunc = dictionary.at(arg[1]);
 
-	parseFunc(argList);
-	LinkedList::Delete(argList);
+		LinkedStrList *argList = new LinkedStrList;
+		LinkedList::Init(argList);
+
+		for (int i = 2; i < length; i++) {
+			LinkedList::AddTail(argList, arg[i]);
+		}
+
+		parseFunc(argList);
+		LinkedList::Delete(argList);
+	}
 }
 
 void main(int argc, char* argv[]) 

@@ -477,6 +477,23 @@ void BlurParser(LinkedStrList* arg)
 */
 void ContrastAdjustParser(LinkedStrList* arg)
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Cropping...\n";
+
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 
 }
 
@@ -487,6 +504,23 @@ void ContrastAdjustParser(LinkedStrList* arg)
 */
 void NearestColourParser(LinkedStrList* arg)
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Cropping...\n";
+
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 
 }
 
@@ -497,6 +531,23 @@ void NearestColourParser(LinkedStrList* arg)
 */
 void LevelsAdjustParser(LinkedStrList* arg)
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Cropping...\n";
+
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 
 }
 
@@ -507,6 +558,23 @@ void LevelsAdjustParser(LinkedStrList* arg)
 */
 void ErrorDiffuseParser(LinkedStrList* arg)
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Cropping...\n";
+
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 
 }
 
@@ -517,6 +585,23 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 */
 void ExposureAdjustParser(LinkedStrList* arg)
 {
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	const char* outfName = nullptr;
+	GetOutputFilename(arg, outfName);
+
+
+	CheckLeftovers(arg);
+
+	Bitmap result;
+	std::cout << "Cropping...\n";
+
+	std::cout << "Complete!" << std::endl;
+
+
+	SaveOutput(outfName, result);
+	DisposeBitmap(bm);
+	DisposeBitmap(result);
 
 }
 // -- GRAYSCALE -- 
