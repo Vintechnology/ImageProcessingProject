@@ -44,6 +44,7 @@ void GetHelp(const char* command)
 	{
 		getline(helpInput, output);
 	}
+
 	getline(helpInput, output, '#');
 	helpInput.close();
 	std::cout << output;
@@ -82,9 +83,9 @@ void InitDictionary()
 	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust
 	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser)); //usable
-	dictionary.insert(std::make_pair("nearest", NearestColourParser));
-	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));
-	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));
+	dictionary.insert(std::make_pair("nearest", NearestColourParser));   //usable
+	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));	//usable
+	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));	//usable
 	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser)); //usable
 	// Grayscale
 	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));     // usable
