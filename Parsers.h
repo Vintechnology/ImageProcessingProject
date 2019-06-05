@@ -600,71 +600,72 @@ void ContrastAdjustParser(LinkedStrList* arg)
 }
 
 /*
-	/TODO: Finish this
+
 	Use case:
 	<app-name> nearest <filename> [args..]
 	-o : output image name (default = "out.bmp")
 	
 	-n <interger> : number of colours input (maximum 9 color)
-	-c <string1> : name of the first color.
-	-c <string2> : name of the second color.
-	...
-	-c <stringn> : the name of the last number
-	(the colors name can be "red" "orange" "yellow" "green" "blue" "indigo" "purple" "black" "white"
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
 */
-Color compareColor(const char *c)
+Color compareColor(char c)
 {
 	Color color;
-	if (strcmp(c, "red") == 0)
+	if (c == 'r')
 	{
-		color.R = 255; 
-		color.G = 0; 
+		color.R = 255;
+		color.G = 0;
 		color.B = 0;
 		return color;
 	}
-	else if (strcmp(c, "orange") == 0)
+	else if (c == 'o')
 	{
 		color.R = 255;
 		color.G = 127;
 		color.B = 0;
 		return color;
 	}
-	else if (strcmp(c, "yellow") == 0)
+	else if (c == 'y')
 	{
 		color.R = 255;
 		color.G = 255;
 		color.B = 0;
 		return color;
 	}
-	else if (strcmp(c, "green") == 0)
+	else if (c == 'g')
 	{
 		color.R = 0;
 		color.G = 255;
 		color.B = 0;
 		return color;
 	}
-	else if (strcmp(c, "blue") == 0)
+	else if (c == 'b')
 	{
 		color.R = 0;
 		color.G = 0;
 		color.B = 255;
 		return color;
 	}
-	else if (strcmp(c, "purple") == 0)
+	else if (c == 'p')
 	{
 		color.R = 39;
 		color.G = 0;
 		color.B = 51;
 		return color;
 	}
-	else if (strcmp(c, "indigo") == 0)
+	else if (c == 'i')
 	{
 		color.R = 139;
 		color.G = 0;
 		color.B = 255;
 		return color;
 	}
-	else if (strcmp(c, "black") == 0)
+	else if (c == 'd')
 	{
 
 		color.R = 0;
@@ -672,7 +673,7 @@ Color compareColor(const char *c)
 		color.B = 0;
 		return color;
 	}
-	else if (strcmp(c, "white") == 0)
+	else if (c == 'w')
 	{
 
 		color.R = 255;
@@ -688,8 +689,9 @@ void NearestColourParser(LinkedStrList* arg)
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
-	int n;
+	int n = 0;
 	const char *temp;
+	std::string holdtemp;
 	Color color[20];
 	int j = 0;
 	if (ParseOption(arg, "-n", temp))
@@ -702,18 +704,20 @@ void NearestColourParser(LinkedStrList* arg)
 	{
 		throw std::string("Invaild command \n");
 	}
-	for (int i = 0; i < n; i++)
+	if (ParseOption(arg, "-c", temp))
 	{
-		if (ParseOption(arg, "-c", temp))
-		{
-			color[j] = compareColor(temp);
-			j++;
-		}
-		else
-		{
-			throw std::string("Not enough color input");
-		}
+		holdtemp.append(temp);
+		if (holdtemp.size() != n)
+			throw std::string("Wrong number of color input \n");
 	}
+	for (int i = 0; i < holdtemp.size(); i++)
+	{
+		color[j] = compareColor(holdtemp[i]);
+		j++;
+	}
+	if(j != n)
+		throw std::string("Wrong number of color input \n");
+
 	CheckLeftovers(arg);
 
 	Bitmap result;
@@ -805,11 +809,12 @@ void LevelsAdjustParser(LinkedStrList* arg)
 	-o : output image name (default = "out.bmp) 
 
 	-n <interger> : number of colours input (maximum 9 color)
-	-c <string1> : name of the first color.
-	-c <string2> : name of the second color.
-	...
-	-c <stringn> : the name of the last number
-	(the colors name can be "red" "orange" "yellow" "green" "blue" "indigo" "purple" "black" "white"
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
 */
 void ErrorDiffuseParser(LinkedStrList* arg)
 {
@@ -820,6 +825,7 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 	const char *temp;
 	int n,j=0;
 	Color color[20];
+	std::string holdtemp;
 	if (ParseOption(arg, "-n", temp))
 	{
 		n = ParseInt(temp);
@@ -830,16 +836,20 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 	{
 		throw std::string("Invaild command \n");
 	}
-	for (int i = 0; i < n; i++)
-	{
-		if (ParseOption(arg, "-c", temp))
-		{
-			color[j] = compareColor(temp);
-			j++;
-		}
-		else throw std::string("Not enough color input \n");
-	}
 
+	if (ParseOption(arg, "-c", temp))
+	{
+		holdtemp.append(temp);
+		if (holdtemp.size() != n)
+			throw std::string("Wrong number of color input \n");
+	}
+	for (int i = 0; i < holdtemp.size(); i++)
+	{
+		color[j] = compareColor(holdtemp[i]);
+		j++;
+	}
+	if(j != n)
+		throw std::string("Wrong number of color input \n");
 	CheckLeftovers(arg);
 
 	Bitmap result;
