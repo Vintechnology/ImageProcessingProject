@@ -72,7 +72,7 @@ Use case:
 #kirsch
 Use case:
 	<app-name> kirsch <filename> [args..]
-	o <string> : output image name (default = "out.bmp")
+	-o <string> : output image name (default = "out.bmp")
 	-dir <string> : choose direction to detect edge.
 	  			Can choose "north" "north_west" "west" "west_south" "south" "south_east" "east" "east_north" 
 
@@ -107,3 +107,41 @@ Use case:
 
 	-hold <string> : don't grayscale a color.
 					 Any one of these value: "red", "yellow", "green", "blue", "purple"
+
+#levels
+Use case:
+	<app-name> levels <filename> [args..]
+	-o : output image name (default = "out.bmp")
+
+	-s <interger>: shadow value (default = 0)
+	-m <interger>: midtone value (default = 128)
+	-h <interger>: highlight value (default = 255)
+	-os <interger>: output shadow value (default = 0)
+	-oh <interger>: output highlight value (default = 255)
+	 (All range from (0 - 255)
+
+#nearest
+Use case:
+	<app-name> nearest <filename> [args..]
+	-o : output image name (default = "out.bmp) 
+
+	-n <interger> : number of colours input (maximum 9 color)
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
+
+#diffuse
+Use case:
+	<app-name> diffuse <filename> [args..]
+	-o : output image name (default = "out.bmp) 
+
+	-n <interger> : number of colours input (maximum 9 color)
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw

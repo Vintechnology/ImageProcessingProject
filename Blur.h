@@ -116,6 +116,7 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 	int **Blue, **Green, **Red, **tempBlue, **tempGreen, **tempRed;
 	Blue = new int*[bmp.height]; Green = new int*[bmp.height]; Red = new int*[bmp.height];
 	tempBlue = new int*[bmp.height]; tempGreen = new int*[bmp.height]; tempRed = new int*[bmp.height];
+
 	for (int i = 0; i < bmp.height; i++)
 	{
 		Blue[i] = new int[bmp.width]; Green[i] = new int[bmp.width]; Red[i] = new int[bmp.width];
@@ -139,7 +140,9 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 		{
 			Color temp;
 			GetPixel(bmp, i, j, temp);
-			Blue[i][j] = temp.B; Green[i][j] = temp.G; Red[i][j] = temp.R;
+			Blue[i][j] = temp.B; 
+			Green[i][j] = temp.G; 
+			Red[i][j] = temp.R;
 		}
 	}
 
@@ -152,7 +155,9 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 		for (int j = 0; j < result.width; j++)
 		{
 			Color temp;
+
 			temp.B = tempBlue[i][j] / factor; temp.G = tempGreen[i][j] / factor; temp.R = tempRed[i][j] / factor;
+
 			SetPixel(result, i, j, temp);
 		}
 	}

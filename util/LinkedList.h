@@ -96,14 +96,14 @@ namespace LinkedList
 
 	void Delete(LinkedStrList* list) 
 	{
-		while (list->head->next != nullptr) {
+		while (list->head != nullptr) {
 			StrNode* node = list->head;
 			list->head = node->next;
-			list->head->prev = nullptr;
+			if(list->head != nullptr)
+				list->head->prev = nullptr;
 
 			delete node;
 		}
-		delete list->head;
 		list->head = nullptr;
 		list->tail = nullptr;
 		delete list;

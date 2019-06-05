@@ -27,7 +27,7 @@ Bitmap Robert(const Bitmap &in);
 Bitmap Prewitt(const Bitmap &in);
 Bitmap LaplacianOfGaussian(Bitmap bmp);
 Bitmap Kirsch(const Bitmap &in, Direction dir);
-// Color Adjustment
+// Color Adjustment: DONE
 Bitmap ContrastAdjust(const Bitmap& bmp, int value);
 Bitmap NearestColour(const Bitmap& bmp, Color colours[], int colorCount);
 Bitmap LevelsAdjust(const Bitmap& bmp, unsigned char input[], unsigned char output[]);

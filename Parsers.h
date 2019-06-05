@@ -428,7 +428,7 @@ void LaplacianOfGaussianParser(LinkedStrList* arg)
 	const char * outfName = nullptr;
 	GetOutputFilename(arg, outfName);
 	CheckLeftovers(arg);
-	
+
 	std::cout << "Doing Laplacian edge detection..." << std::endl;
 	Bitmap result = LaplacianOfGaussian(bm);
 	std::cout << "Completed!" << std::endl;
@@ -600,23 +600,129 @@ void ContrastAdjustParser(LinkedStrList* arg)
 }
 
 /*
+
 	Use case:
 	<app-name> nearest <filename> [args..]
 	-o : output image name (default = "out.bmp")
+	
+	-n <interger> : number of colours input (maximum 9 color)
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
 */
+Color compareColor(char c)
+{
+	Color color;
+	if (c == 'r')
+	{
+		color.R = 255;
+		color.G = 0;
+		color.B = 0;
+		return color;
+	}
+	else if (c == 'o')
+	{
+		color.R = 255;
+		color.G = 127;
+		color.B = 0;
+		return color;
+	}
+	else if (c == 'y')
+	{
+		color.R = 255;
+		color.G = 255;
+		color.B = 0;
+		return color;
+	}
+	else if (c == 'g')
+	{
+		color.R = 0;
+		color.G = 255;
+		color.B = 0;
+		return color;
+	}
+	else if (c == 'b')
+	{
+		color.R = 0;
+		color.G = 0;
+		color.B = 255;
+		return color;
+	}
+	else if (c == 'p')
+	{
+		color.R = 39;
+		color.G = 0;
+		color.B = 51;
+		return color;
+	}
+	else if (c == 'i')
+	{
+		color.R = 139;
+		color.G = 0;
+		color.B = 255;
+		return color;
+	}
+	else if (c == 'd')
+	{
+
+		color.R = 0;
+		color.G = 0;
+		color.B = 0;
+		return color;
+	}
+	else if (c == 'w')
+	{
+
+		color.R = 255;
+		color.G = 255;
+		color.B = 255;
+		return color;
+	}
+	else throw std::string("Invalid color");
+}
 void NearestColourParser(LinkedStrList* arg)
 {
 	Bitmap bm;
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
-
+	int n = 0;
+	const char *temp;
+	std::string holdtemp;
+	Color color[20];
+	int j = 0;
+	if (ParseOption(arg, "-n", temp))
+	{
+		n = ParseInt(temp);
+		if (n < 1 || n > 9)
+			throw std::string("Number of color is out of range [1,9] \n");
+	}
+	else
+	{
+		throw std::string("Invaild command \n");
+	}
+	if (ParseOption(arg, "-c", temp))
+	{
+		holdtemp.append(temp);
+		if (holdtemp.size() != n)
+			throw std::string("Wrong number of color input \n");
+	}
+	for (int i = 0; i < holdtemp.size(); i++)
+	{
+		color[j] = compareColor(holdtemp[i]);
+		j++;
+	}
+	if(j != n)
+		throw std::string("Wrong number of color input \n");
 
 	CheckLeftovers(arg);
 
 	Bitmap result;
-	std::cout << "Cropping...\n";
-
+	std::cout << "Adjusting...\n";
+	result = NearestColour(bm, color, n);
 	std::cout << "Complete!" << std::endl;
 
 
@@ -630,20 +736,64 @@ void NearestColourParser(LinkedStrList* arg)
 	Use case:
 	<app-name> levels <filename> [args..]
 	-o : output image name (default = "out.bmp")
+
+	-s <interger>: shadow value (default = 0)
+	-m <interger>: midtone value (default = 128)
+	-h <interger>: highlight value (default = 255)
+	-os <interger>: output shadow value (default = 0)
+	-oh <interger>: output highlight value (default = 255)
+	 (All range from (0 - 255)
 */
+void checkRange(const char *place, int value)
+{
+	if (value > 255 || value < 0)
+		throw std::string("Value of \"") + place + "\" is out of range [0,255]. \n";
+}
 void LevelsAdjustParser(LinkedStrList* arg)
 {
 	Bitmap bm;
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
+	unsigned char input[3], output[2];
+	input[0] = 0;
+	input[1] = 128;
+	input[2] = 255;
+	output[0] = 0;
+	output[1] = 255;
 
-
+	const char *temp;
+	if (ParseOption(arg, "-s", temp))
+	{
+		input[0] = ParseInt(temp);
+		checkRange("shadow value", input[0]);
+	}
+	if (ParseOption(arg, "-m", temp))
+	{
+		input[1] = ParseInt(temp);
+		checkRange("midtone value", input[1]);
+	}
+	if (ParseOption(arg, "-h", temp))
+	{
+		input[2] = ParseInt(temp);
+		checkRange("highlight value", input[2]);
+	}
+	if (ParseOption(arg, "-os", temp))
+	{
+		output[0] = ParseInt(temp);
+		checkRange("output shadow value", output[0]);
+	}
+	if (ParseOption(arg, "-oh", temp))
+	{
+		output[1] = ParseInt(temp);
+		checkRange("output highlight value",output[1]);
+	}
+	
 	CheckLeftovers(arg);
-
+	
 	Bitmap result;
-	std::cout << "Cropping...\n";
-
+	std::cout << "Adjusting...\n";
+	result = LevelsAdjust(bm, input, output);
 	std::cout << "Complete!" << std::endl;
 
 
@@ -656,7 +806,15 @@ void LevelsAdjustParser(LinkedStrList* arg)
 /*
 	Use case:
 	<app-name> diffuse <filename> [args..]
-	-o : output image name (default = "out.bmp")
+	-o : output image name (default = "out.bmp) 
+
+	-n <interger> : number of colours input (maximum 9 color)
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
 */
 void ErrorDiffuseParser(LinkedStrList* arg)
 {
@@ -664,13 +822,39 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
+	const char *temp;
+	int n,j=0;
+	Color color[20];
+	std::string holdtemp;
+	if (ParseOption(arg, "-n", temp))
+	{
+		n = ParseInt(temp);
+		if (n < 1 || n > 9)
+			throw std::string("Number of color is out of range [1,9]\n");
+	}
+	else
+	{
+		throw std::string("Invaild command \n");
+	}
 
-
+	if (ParseOption(arg, "-c", temp))
+	{
+		holdtemp.append(temp);
+		if (holdtemp.size() != n)
+			throw std::string("Wrong number of color input \n");
+	}
+	for (int i = 0; i < holdtemp.size(); i++)
+	{
+		color[j] = compareColor(holdtemp[i]);
+		j++;
+	}
+	if(j != n)
+		throw std::string("Wrong number of color input \n");
 	CheckLeftovers(arg);
 
 	Bitmap result;
-	std::cout << "Cropping...\n";
-
+	std::cout << "Adjusting...\n";
+	result = ErrorDiffuse(bm, color, n);
 	std::cout << "Complete!" << std::endl;
 
 
