@@ -57,7 +57,7 @@ void HelpParser(LinkedStrList* arg)
 		const char* command = LinkedList::Get(arg, arg->head);
 		if (dictionary.count(command) == 0)
 		{
-			throw std::string("No such feature \"") + LinkedList::Get(arg, arg->head) + "\"\n";
+			throw std::string("No such feature \"") + command + "\"\n";
 		}
 		GetHelp(command);
 	}
