@@ -103,7 +103,7 @@ void EvaluateCommand(char** arg, int length) {
 
 	if (length == 2)
 	{
-		throw std::string("No value given. Please specify the filename of your image.\n");
+		throw std::string("No value given. Please specify.\n");
 	}
 }
 

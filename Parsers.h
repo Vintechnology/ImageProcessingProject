@@ -603,15 +603,15 @@ void ContrastAdjustParser(LinkedStrList* arg)
 
 	Use case:
 	<app-name> nearest <filename> [args..]
-	-o : output image name (default = "out.bmp")
-	
-	-c <string> : string include name of the colours.
+	-o : output image name (default = "out.bmp) 
 
-	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
-	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
-	(maximum input is 9 color and minimum is 1 color)
-	example: - if you want the input colors to be red yellow and white, type -c ryw.
-	- if you want input colors to be black and white, type -c dw
+	-c <string> : string include characters of the colours.
+
+	Supported values: "r" for red, "o" for orange, "y" for yellow, "g" for green,
+				"b" for blue, "i" for indigo, "p" for purple, "d" for black and "w" for white.
+	
+	Example: - if you want the input colors to be red yellow and white, type -c ryw.
+		- if you want input colors to be black and white, type -c dw
 */
 Color compareColor(char c)
 {
@@ -811,14 +811,14 @@ void LevelsAdjustParser(LinkedStrList* arg)
 	Use case:
 	<app-name> diffuse <filename> [args..]
 	-o : output image name (default = "out.bmp) 
+	
+	-c <string> : string include characters of the colours.
 
-	-c <string> : string include name of the colours.
-
-	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
-	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
-	(maximum input is 9 color and minimum is 1 color)
-	example: - if you want the input colors to be red yellow and white, type -c ryw.
-	- if you want input colors to be black and white, type -c dw
+	Supported values: "r" for red, "o" for orange, "y" for yellow, "g" for green,
+					  "b" for blue, "i" for indigo, "p" for purple, "d" for black and "w" for white.
+	
+	Example: - if you want the input colors to be red yellow and white, type -c ryw.
+		     - if you want input colors to be black and white, type -c dw
 */
 void ErrorDiffuseParser(LinkedStrList* arg)
 {
