@@ -115,11 +115,9 @@ void handlingCommand(char** arg, int length)
 	}
 	else if (strcmp(arg[1], "list") == 0)
 	{
-		std::cout << "--BASIC--\nrotate    flip    crop    scale    resize\n" << std::endl;
+		std::cout << "--BASIC--\nrotate    flip    crop    scale    resize    blur\n" << std::endl;
 		std::cout << "--EDGE DETECTION--\nsobel    robert    prewitt    kirsch    laplacian\n" << std::endl;
-		std::cout << "--BLUR--\nblur\n" << std::endl;
-		std::cout << "--COLOR ADJUST--\ncontrast    nearest    levels    diffuse    exposure\n" << std::endl;
-		std::cout << "--GRAYSCALE--\ngrayscale\n" << std::endl;
+		std::cout << "--COLOR ADJUST--\ncontrast    nearest    levels    diffuse    exposure    grayscale\n" << std::endl;
 	}
 	else if (strcmp(arg[1], "-version") == 0)
 	{

@@ -89,8 +89,14 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 	result.pixels = new unsigned char[result.height * result.rowSize];
 
 	linalg::Matrix Blue, Red, Green, tempBlue, tempRed, tempGreen;
-	Blue.resize(bmp.height); Red.resize(bmp.height); Green.resize(bmp.height);
-	tempBlue.resize(bmp.height); tempRed.resize(bmp.height); tempGreen.resize(bmp.height);
+	Blue.resize(bmp.height); 
+	Red.resize(bmp.height); 
+	Green.resize(bmp.height);
+
+	tempBlue.resize(bmp.height); 
+	tempRed.resize(bmp.height);
+	tempGreen.resize(bmp.height);
+
 	for (int i = 0; i < bmp.height; i++)
 	{
 		Blue[i].resize(bmp.width);
@@ -112,20 +118,29 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 		{
 			Color temp;
 			GetPixel(bmp, i, j, temp);
-			Blue[i][j] = temp.B; Green[i][j] = temp.G; Red[i][j] = temp.R;
+			Blue[i][j] = temp.B; 
+			Green[i][j] = temp.G; 
+			Red[i][j] = temp.R;
 		}
 	}
 
-	linalg::convolution1D(Red, tempRed, horizontalKernel); linalg::convolution1D(tempRed, Red, verticalKernel);
-	linalg::convolution1D(Green, tempGreen, horizontalKernel); linalg::convolution1D(tempGreen, Green, verticalKernel);
-	linalg::convolution1D(Blue, tempBlue, horizontalKernel); linalg::convolution1D(tempBlue, Blue, verticalKernel);
+	linalg::convolution1D(Red, tempRed, horizontalKernel); 
+	linalg::convolution1D(tempRed, Red, verticalKernel);
+	
+	linalg::convolution1D(Green, tempGreen, horizontalKernel); 
+	linalg::convolution1D(tempGreen, Green, verticalKernel);
+	
+	linalg::convolution1D(Blue, tempBlue, horizontalKernel); 
+	linalg::convolution1D(tempBlue, Blue, verticalKernel);
 
 	for (int i = 0; i < result.height; i++)
 	{
 		for (int j = 0; j < result.width; j++)
 		{
 			Color temp;
-			temp.B = Blue[i][j] / factor; temp.G = Green[i][j] / factor; temp.R = Red[i][j] / factor;
+			temp.B = Blue[i][j] / factor; 
+			temp.G = Green[i][j] / factor; 
+			temp.R = Red[i][j] / factor;
 			SetPixel(result, i, j, temp);
 		}
 	}
