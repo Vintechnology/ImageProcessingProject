@@ -126,12 +126,13 @@ Use case:
 	-o : output image name (default = "out.bmp) 
 
 	-n <interger> : number of colours input (maximum 9 color)
-	-c <string> : string include name of the colours.
+	-c <string> : string include characters of the colours.
 
-	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
-	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
-	example: - if you want the input colors to be red yellow and white, type -c ryw.
-	- if you want input colors to be black and white, type -c dw
+	Supported values: "r" for red, "o" for orange, "y" for yellow, "g" for green,
+					  "b" for blue, "i" for indigo, "p" for purple, "d" for black and "w" for white.
+	
+	Example: - if you want the input colors to be red yellow and white, type -c ryw.
+			 - if you want input colors to be black and white, type -c dw
 
 #diffuse
 Use case:
@@ -139,9 +140,10 @@ Use case:
 	-o : output image name (default = "out.bmp) 
 
 	-n <interger> : number of colours input (maximum 9 color)
-	-c <string> : string include name of the colours.
+	-c <string> : string include characters of the colours.
 
-	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
-	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
-	example: - if you want the input colors to be red yellow and white, type -c ryw.
-	- if you want input colors to be black and white, type -c dw
+	Supported values: "r" for red, "o" for orange, "y" for yellow, "g" for green,
+					  "b" for blue, "i" for indigo, "p" for purple, "d" for black and "w" for white.
+	
+	Example: - if you want the input colors to be red yellow and white, type -c ryw.
+			 - if you want input colors to be black and white, type -c dw
