@@ -418,7 +418,7 @@ void PrewittParser(LinkedStrList* arg)
 
 /*
 	Use case:
-	<app-name> laplaction <filename> [args..]
+	<app-name> laplacian <filename> [args..]
 	-o <string> : output image name (default = "out.bmp")
 */
 void LaplacianOfGaussianParser(LinkedStrList* arg)
@@ -428,8 +428,8 @@ void LaplacianOfGaussianParser(LinkedStrList* arg)
 	const char * outfName = nullptr;
 	GetOutputFilename(arg, outfName);
 	CheckLeftovers(arg);
-
-	std::cout << "Doing Laplaction edge detection..." << std::endl;
+	
+	std::cout << "Doing Laplacian edge detection..." << std::endl;
 	Bitmap result = LaplacianOfGaussian(bm);
 	std::cout << "Completed!" << std::endl;
 	SaveOutput(outfName, result);

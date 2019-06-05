@@ -56,27 +56,52 @@ double* FilterCreator(int R, double sigma)
 	}return result;
 }
 
-void ConvertKernel(double* input, int R, linalg::Matrix &horizontalKernel, linalg::Matrix &verticalKernel)
+int** ConvertKernel(double* input, int R, int* kernel1D)
 {
-	horizontalKernel.resize(1); verticalKernel.resize(2 * R + 1); horizontalKernel[0].resize(2 * R + 1);
+	int** kernel2D = new int*[2 * R + 1];
 	for (int i = 0; i <= 2 * R; i++)
 	{
-		horizontalKernel[0][i] = input[i] / input[0];
-		verticalKernel[i].resize(1);
-		verticalKernel[i][0] = input[i] / input[0];
+		kernel2D[i] = new int[2 * R + 1];
+		kernel1D[i] = input[i] / input[0];
 	}
+	for (int i = 0; i <= 2 * R; i++)
+	{
+		for (int j = 0; j <= 2 * R; j++)
+		{
+			kernel2D[i][j] = kernel1D[i] * kernel1D[j];
+		}
+	}return kernel2D;
 }
 
-int SumKernel(linalg::Matrix kernel, int R)
+int SumKernel(int* kernel, int R)
 {
 	int result = 0;
 	for (int i = 0; i <= 2 * R; i++)
 	{
 		for (int j = 0; j <= 2 * R; j++)
 		{
-			result += kernel[i][0] * kernel[j][0];
+			result += kernel[i] * kernel[j];
 		}
 	}return result;
+}
+
+void convolution2D(int** input, int** output, int** kernel, int height, int width, int R)
+{
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			output[i][j] = 0;
+			for (int u = i - R; u <= i + R; u++)
+			for (int v = j - R; v <= j + R; v++)
+			{
+				if ((u >= 0) && (u < height) && (v >= 0) && (v < height))
+				{
+					output[i][j] += input[u][v] * kernel[u - i + R][v - j + R];
+				}
+			}
+		}
+	}
 }
 
 Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
@@ -88,23 +113,25 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 	result.rowSize = ((3 * result.width + 3) / 4) * 4;
 	result.pixels = new unsigned char[result.height * result.rowSize];
 
-	linalg::Matrix Blue, Red, Green, tempBlue, tempRed, tempGreen;
-	Blue.resize(bmp.height); Red.resize(bmp.height); Green.resize(bmp.height);
-	tempBlue.resize(bmp.height); tempRed.resize(bmp.height); tempGreen.resize(bmp.height);
+	int **Blue, **Green, **Red, **tempBlue, **tempGreen, **tempRed;
+	Blue = new int*[bmp.height]; Green = new int*[bmp.height]; Red = new int*[bmp.height];
+	tempBlue = new int*[bmp.height]; tempGreen = new int*[bmp.height]; tempRed = new int*[bmp.height];
 	for (int i = 0; i < bmp.height; i++)
 	{
-		Blue[i].resize(bmp.width);
-		Red[i].resize(bmp.width);
-		Green[i].resize(bmp.width);
-		tempBlue[i].resize(bmp.width);
-		tempRed[i].resize(bmp.width);
-		tempGreen[i].resize(bmp.width);
+		Blue[i] = new int[bmp.width]; Green[i] = new int[bmp.width]; Red[i] = new int[bmp.width];
+		tempBlue[i] = new int[bmp.width]; tempGreen[i] = new int[bmp.width]; tempRed[i] = new int[bmp.width];
 	}
 
-	linalg::Matrix horizontalKernel, verticalKernel;
-	ConvertKernel(FilterCreator(R, sigma), R, horizontalKernel, verticalKernel);
+	int* kernel1D;
+	kernel1D = new int[2 * R + 1];
+	int** kernel2D = new int*[2 * R + 1];
+	for (int i = 0; i <= 2 * R; i++)
+	{
+		kernel2D[i] = new int[2 * R + 1];
+	}
+	kernel2D = ConvertKernel(FilterCreator(R, sigma), R, kernel1D);
 
-	int factor = SumKernel(verticalKernel, R);
+	int factor = SumKernel(kernel1D, R);
 
 	for (int i = 0; i < result.height; i++)
 	{
@@ -116,16 +143,16 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 		}
 	}
 
-	linalg::convolution1D(Red, tempRed, horizontalKernel); linalg::convolution1D(tempRed, Red, verticalKernel);
-	linalg::convolution1D(Green, tempGreen, horizontalKernel); linalg::convolution1D(tempGreen, Green, verticalKernel);
-	linalg::convolution1D(Blue, tempBlue, horizontalKernel); linalg::convolution1D(tempBlue, Blue, verticalKernel);
+	convolution2D(Blue, tempBlue, kernel2D, bmp.height, bmp.width, R);
+	convolution2D(Red, tempRed, kernel2D, bmp.height, bmp.width, R);
+	convolution2D(Green, tempGreen, kernel2D, bmp.height, bmp.width, R);
 
 	for (int i = 0; i < result.height; i++)
 	{
 		for (int j = 0; j < result.width; j++)
 		{
 			Color temp;
-			temp.B = Blue[i][j] / factor; temp.G = Green[i][j] / factor; temp.R = Red[i][j] / factor;
+			temp.B = tempBlue[i][j] / factor; temp.G = tempGreen[i][j] / factor; temp.R = tempRed[i][j] / factor;
 			SetPixel(result, i, j, temp);
 		}
 	}

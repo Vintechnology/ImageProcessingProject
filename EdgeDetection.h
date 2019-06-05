@@ -310,17 +310,24 @@ Bitmap LaplacianOfGaussian(Bitmap bmp)
 	//blur input image
 	bmp = GaussianBlur(bmp, 1, 2);
 
-	linalg::Matrix Gray, tempGray;
-	Gray.resize(bmp.height); tempGray.resize(bmp.height);
+	int **Gray, **tempGray;
+	Gray = new int*[bmp.height]; tempGray = new int*[bmp.height];
 	for (int i = 0; i < bmp.height; i++)
 	{
-		Gray[i].resize(bmp.width);
-		tempGray[i].resize(bmp.width);
+		Gray[i] = new int[bmp.width];
+		tempGray[i] = new int[bmp.width];
 	}
 
-	linalg::Matrix kernel{ { 1, 1, 1 },
-	{ 1, -8, 1 },
-	{ 1, 1, 1 } };
+	int** kernel;
+	kernel = new int*[3];
+	for (int i = 0; i < 3; i++)
+	{
+		kernel[i] = new int[3];
+	}for (int i = 0; i < 3; i++)
+	for (int j = 0; j < 3; j++)
+		kernel[i][j] = -1;
+	kernel[1][1] = 8;
+
 	//turn input image into grayscale
 	for (int i = 0; i < result.height; i++)
 	{
@@ -332,7 +339,7 @@ Bitmap LaplacianOfGaussian(Bitmap bmp)
 		}
 	}
 	//apply LoG kernel to input image
-	linalg::convolution2D(Gray, tempGray, kernel);
+	convolution2D(Gray, tempGray, kernel, bmp.height, bmp.width, 1);
 
 	//zero crossing
 	int threshold = 20;
