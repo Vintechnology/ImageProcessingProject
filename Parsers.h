@@ -605,11 +605,11 @@ void ContrastAdjustParser(LinkedStrList* arg)
 	<app-name> nearest <filename> [args..]
 	-o : output image name (default = "out.bmp")
 	
-	-n <interger> : number of colours input (maximum 9 color)
 	-c <string> : string include name of the colours.
 
 	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
 	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	(maximum input is 9 color and minimum is 1 color)
 	example: - if you want the input colors to be red yellow and white, type -c ryw.
 	- if you want input colors to be black and white, type -c dw
 */
@@ -683,46 +683,50 @@ Color compareColor(char c)
 	}
 	else throw std::string("Invalid color");
 }
+void findIfRepeat(std::string str)
+{
+	for (int i = 0; i < str.size(); i++)
+	{
+		for (int j = i + 1; j < str.size(); j++)
+			if(str[i] == str[j])
+				throw std::string("Repeated color in input \n");
+	}
+}
 void NearestColourParser(LinkedStrList* arg)
 {
 	Bitmap bm;
 	GetInputBitmap(arg, bm);
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
-	int n = 0;
 	const char *temp;
 	std::string holdtemp;
 	Color color[20];
 	int j = 0;
-	if (ParseOption(arg, "-n", temp))
-	{
-		n = ParseInt(temp);
-		if (n < 1 || n > 9)
-			throw std::string("Number of color is out of range [1,9] \n");
-	}
-	else
-	{
-		throw std::string("Invaild command \n");
-	}
+
 	if (ParseOption(arg, "-c", temp))
 	{
 		holdtemp.append(temp);
-		if (holdtemp.size() != n)
+		if (holdtemp.size() < 1 || holdtemp.size() > 9)
 			throw std::string("Wrong number of color input \n");
 	}
+	else 
+		throw std::string("Wrong command \n");
+	
+	findIfRepeat(holdtemp);
+
 	for (int i = 0; i < holdtemp.size(); i++)
 	{
 		color[j] = compareColor(holdtemp[i]);
 		j++;
 	}
-	if(j != n)
+	if(j < 1 || j > 9)
 		throw std::string("Wrong number of color input \n");
 
 	CheckLeftovers(arg);
 
 	Bitmap result;
 	std::cout << "Adjusting...\n";
-	result = NearestColour(bm, color, n);
+	result = NearestColour(bm, color, j);
 	std::cout << "Complete!" << std::endl;
 
 
@@ -808,11 +812,11 @@ void LevelsAdjustParser(LinkedStrList* arg)
 	<app-name> diffuse <filename> [args..]
 	-o : output image name (default = "out.bmp) 
 
-	-n <interger> : number of colours input (maximum 9 color)
 	-c <string> : string include name of the colours.
 
 	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
 	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	(maximum input is 9 color and minimum is 1 color)
 	example: - if you want the input colors to be red yellow and white, type -c ryw.
 	- if you want input colors to be black and white, type -c dw
 */
@@ -823,38 +827,32 @@ void ErrorDiffuseParser(LinkedStrList* arg)
 	const char* outfName = nullptr;
 	GetOutputFilename(arg, outfName);
 	const char *temp;
-	int n,j=0;
+	int j=0;
 	Color color[20];
 	std::string holdtemp;
-	if (ParseOption(arg, "-n", temp))
-	{
-		n = ParseInt(temp);
-		if (n < 1 || n > 9)
-			throw std::string("Number of color is out of range [1,9]\n");
-	}
-	else
-	{
-		throw std::string("Invaild command \n");
-	}
-
 	if (ParseOption(arg, "-c", temp))
 	{
 		holdtemp.append(temp);
-		if (holdtemp.size() != n)
+		if (holdtemp.size() < 1 || holdtemp.size() > 9)
 			throw std::string("Wrong number of color input \n");
 	}
+	else 
+		throw std::string("Wrong command \n");
+	
+	findIfRepeat(holdtemp);
+
 	for (int i = 0; i < holdtemp.size(); i++)
 	{
 		color[j] = compareColor(holdtemp[i]);
 		j++;
 	}
-	if(j != n)
+	if (j < 1 || j > 9)
 		throw std::string("Wrong number of color input \n");
 	CheckLeftovers(arg);
 
 	Bitmap result;
 	std::cout << "Adjusting...\n";
-	result = ErrorDiffuse(bm, color, n);
+	result = ErrorDiffuse(bm, color, j);
 	std::cout << "Complete!" << std::endl;
 
 
