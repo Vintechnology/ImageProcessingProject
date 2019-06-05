@@ -126,11 +126,12 @@ Use case:
 	-o : output image name (default = "out.bmp) 
 
 	-n <interger> : number of colours input (maximum 9 color)
-	-c <string1> : name of the first color.
-	-c <string2> : name of the second color.
-	...
-	-c <stringn> : the name of the last number
-	(the colors name can be "red" "orange" "yellow" "green" "blue" "indigo" "purple" "black" "white"
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
 
 #diffuse
 Use case:
@@ -138,8 +139,9 @@ Use case:
 	-o : output image name (default = "out.bmp) 
 
 	-n <interger> : number of colours input (maximum 9 color)
-	-c <string1> : name of the first color.
-	-c <string2> : name of the second color.
-	...
-	-c <stringn> : the name of the last number
-	(the colors name can be "red" "orange" "yellow" "green" "blue" "indigo" "purple" "black" "white"
+	-c <string> : string include name of the colours.
+
+	(name is can be "r" for red, "o" for orange, "y" for yellow "g" for green
+	"b" for blue,"i" for indigo, "p" for purple,"d" for black and "w" for white.)
+	example: - if you want the input colors to be red yellow and white, type -c ryw.
+	- if you want input colors to be black and white, type -c dw
