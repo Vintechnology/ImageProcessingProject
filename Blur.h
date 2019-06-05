@@ -95,7 +95,7 @@ void convolution2D(int** input, int** output, int** kernel, int height, int widt
 			for (int u = i - R; u <= i + R; u++)
 			for (int v = j - R; v <= j + R; v++)
 			{
-				if ((u >= 0) && (u < height) && (v >= 0) && (v < height))
+				if ((u >= 0) && (u < height) && (v >= 0) && (v < width))
 				{
 					output[i][j] += input[u][v] * kernel[u - i + R][v - j + R];
 				}
