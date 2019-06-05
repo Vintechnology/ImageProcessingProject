@@ -64,9 +64,9 @@ Use case:
 	<app-name> prewitt <filename> [args..]
 	-o <string> : output image name (default = "out.bmp")
 
-#laplaction
+#laplacian
 Use case:
-	<app-name> laplaction <filename> [args..]
+	<app-name> laplacian <filename> [args..]
 	-o <string> : output image name (default = "out.bmp")
 
 #kirsch
