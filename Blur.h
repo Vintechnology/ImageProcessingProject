@@ -47,41 +47,15 @@ Bitmap MediumBlur(const Bitmap &bmp, int R)
 	return result;
 }
 
-double* FilterCreator(int R, double sigma)
+double** FilterCreator(int R, double sigma)
 {
-	double* result = new double[2 * R + 1];
+	double** result = new double*[2 * R + 1];
+	for (int i = 0; i <= 2 * R; i++)
+		result[i] = new double[2 * R + 1];
 	for (int x = -R; x <= R; x++)
 	{
-		result[x + R] = (exp(-(x*x) / (2 * sigma*sigma)) / (sqrt(2 * PI)*sigma));
-	}return result;
-}
-
-int** ConvertKernel(double* input, int R, int* kernel1D)
-{
-	int** kernel2D = new int*[2 * R + 1];
-	for (int i = 0; i <= 2 * R; i++)
-	{
-		kernel2D[i] = new int[2 * R + 1];
-		kernel1D[i] = input[i] / input[0];
-	}
-	for (int i = 0; i <= 2 * R; i++)
-	{
-		for (int j = 0; j <= 2 * R; j++)
-		{
-			kernel2D[i][j] = kernel1D[i] * kernel1D[j];
-		}
-	}return kernel2D;
-}
-
-int SumKernel(int* kernel, int R)
-{
-	int result = 0;
-	for (int i = 0; i <= 2 * R; i++)
-	{
-		for (int j = 0; j <= 2 * R; j++)
-		{
-			result += kernel[i] * kernel[j];
-		}
+		for (int y = -R; y <= R; y++)
+			result[x + R][y + R] = (exp(-(x*x + y*y) / (2 * sigma*sigma)) / (2 * PI*sigma*sigma));
 	}return result;
 }
 
@@ -104,6 +78,30 @@ void convolution2D(int** input, int** output, int** kernel, int height, int widt
 	}
 }
 
+void convolution2D(int** input, int** output, double** kernel, int height, int width, int R, double sum)
+{
+	double** temp = new double*[height];
+	for (int i = 0; i < height; i++)
+		temp[i] = new double[width];
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			temp[i][j] = 0;
+			for (int u = i - R; u <= i + R; u++)
+			for (int v = j - R; v <= j + R; v++)
+			{
+				if ((u >= 0) && (u < height) && (v >= 0) && (v < width))
+				{
+					temp[i][j] += input[u][v] * kernel[u - i + R][v - j + R];
+				}
+			}
+			output[i][j] = temp[i][j] / sum;
+		}
+	}
+	delete[] temp;
+}
+
 Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 {
 
@@ -116,48 +114,43 @@ Bitmap GaussianBlur(const Bitmap &bmp, int R, double sigma)
 	int **Blue, **Green, **Red, **tempBlue, **tempGreen, **tempRed;
 	Blue = new int*[bmp.height]; Green = new int*[bmp.height]; Red = new int*[bmp.height];
 	tempBlue = new int*[bmp.height]; tempGreen = new int*[bmp.height]; tempRed = new int*[bmp.height];
-
 	for (int i = 0; i < bmp.height; i++)
 	{
 		Blue[i] = new int[bmp.width]; Green[i] = new int[bmp.width]; Red[i] = new int[bmp.width];
 		tempBlue[i] = new int[bmp.width]; tempGreen[i] = new int[bmp.width]; tempRed[i] = new int[bmp.width];
 	}
 
-	int* kernel1D;
-	kernel1D = new int[2 * R + 1];
-	int** kernel2D = new int*[2 * R + 1];
+	double** kernel2D = new double*[2 * R + 1];
 	for (int i = 0; i <= 2 * R; i++)
 	{
-		kernel2D[i] = new int[2 * R + 1];
+		kernel2D[i] = new double[2 * R + 1];
 	}
-	kernel2D = ConvertKernel(FilterCreator(R, sigma), R, kernel1D);
-
-	int factor = SumKernel(kernel1D, R);
-
+	kernel2D = FilterCreator(R, sigma);
+	double sum = 0;
+	for (int i = 0; i <= 2 * R; i++)
+	for (int j = 0; j <= 2 * R; j++)
+		sum += kernel2D[i][j];
+	
 	for (int i = 0; i < result.height; i++)
 	{
 		for (int j = 0; j < result.width; j++)
 		{
 			Color temp;
 			GetPixel(bmp, i, j, temp);
-			Blue[i][j] = temp.B; 
-			Green[i][j] = temp.G; 
-			Red[i][j] = temp.R;
+			Blue[i][j] = temp.B; Green[i][j] = temp.G; Red[i][j] = temp.R;
 		}
 	}
 
-	convolution2D(Blue, tempBlue, kernel2D, bmp.height, bmp.width, R);
-	convolution2D(Red, tempRed, kernel2D, bmp.height, bmp.width, R);
-	convolution2D(Green, tempGreen, kernel2D, bmp.height, bmp.width, R);
+	convolution2D(Blue, tempBlue, kernel2D, bmp.height, bmp.width, R, sum);
+	convolution2D(Red, tempRed, kernel2D, bmp.height, bmp.width, R, sum);
+	convolution2D(Green, tempGreen, kernel2D, bmp.height, bmp.width, R, sum);
 
 	for (int i = 0; i < result.height; i++)
 	{
 		for (int j = 0; j < result.width; j++)
 		{
 			Color temp;
-
-			temp.B = tempBlue[i][j] / factor; temp.G = tempGreen[i][j] / factor; temp.R = tempRed[i][j] / factor;
-
+			temp.B = tempBlue[i][j]; temp.G = tempGreen[i][j]; temp.R = tempRed[i][j];
 			SetPixel(result, i, j, temp);
 		}
 	}
