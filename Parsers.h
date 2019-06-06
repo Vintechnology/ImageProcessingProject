@@ -139,9 +139,9 @@ void RotateParser(LinkedStrList* arg)
 	Bitmap result;
 	std::cout << "Doing rotation...\n";
 	if (rLeft)
-		result = Turn90Degree(bm);
-	else if (rRight)
 		result = Turn270Degree(bm);
+	else if (rRight)
+		result = Turn90Degree(bm);
 	else if (rDown)
 		result = Turn180Degree(bm);
 	else if (rDegree)
@@ -174,7 +174,7 @@ void FlipParser(LinkedStrList* arg)
 
 	flipH = ParseOption(arg, "-h");
 	flipV = ParseOption(arg, "-v");
-	if (flipH || flipV)
+	if (!(flipH || flipV))
 		throw std::string("No option given.\nPlease use any of these: -h , -v\n");
 	CheckLeftovers(arg);
 
@@ -905,7 +905,7 @@ void ExposureAdjustParser(LinkedStrList* arg)
 	-o : output image name (default = "out.bmp")
 
 	-hold <string> : don't grayscale a color.
-					 Any one of these value: "red", "yellow", "green", "blue", "purple" 
+					 Any in one of these value: "red", "yellow", "green", "blue", "purple" 
 */
 void GrayscaleParser(LinkedStrList* arg)
 {
@@ -965,4 +965,53 @@ void GrayscaleParser(LinkedStrList* arg)
 	SaveOutput(outfName, result);
 	DisposeBitmap(bm);
 	DisposeBitmap(result);
+}
+
+/*
+	Use case:
+	<app-name> hist <filename> [args..]
+
+	-r: color histogram of red channel
+	-b: color histogram of blue channel
+	-g: color histogram of green channel
+	-l: luminance histogram
+*/
+void HistParser(LinkedStrList* arg)
+{
+	Bitmap bm;
+	GetInputBitmap(arg, bm);
+	bool R, G, B, L;
+	R = ParseOption(arg, "-r");
+	G = ParseOption(arg, "-g");
+	B = ParseOption(arg, "-b");
+	L = ParseOption(arg, "-l");
+
+	CheckLeftovers(arg);
+	if (!(R || G || B || L))
+	{
+		throw std::string("No option given\n");
+	}
+	std::cout << "\n";
+	if (R)
+	{
+		std::cout << "\t\t\t==Red Histogram==";
+		DrawHistogram(bm, RedChannel);
+	}
+	if (G)
+	{
+		std::cout << "\t\t\t==Green Histogram==";
+		DrawHistogram(bm, GreenChannel);
+	}
+	if (B)
+	{
+		std::cout << "\t\t\t==Blue Histogram==";
+		DrawHistogram(bm, BlueChannel);
+	}
+	if (L)
+	{
+		std::cout << "\t\t\t==Luminance Histogram==";
+		DrawHistogram(bm, LuminanceChannel);
+	}
+
+	DisposeBitmap(bm);
 }

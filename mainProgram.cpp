@@ -5,6 +5,7 @@
 #include <sstream>
 #include "util/LinkedList.h"
 #include "Parsers.h"
+#include "usage.h"
 
 std::string VERSION = "0.0.1";
 
@@ -36,17 +37,13 @@ void GetHelp(const char* command)
 	check.append(command);
 	check = "#" + check;
 	
-	std::ifstream helpInput;
-	helpInput.open("usage.txt");
-	if (helpInput.fail())
-		throw std::string("Unable to find usage.txt in your computer");
+	std::stringstream helpInput(usage);
 	while (strcmp(output.c_str(), check.c_str()) != 0)
 	{
 		getline(helpInput, output);
 	}
 
 	getline(helpInput, output, '#');
-	helpInput.close();
 	std::cout << output;
 }
 
@@ -66,7 +63,8 @@ void HelpParser(LinkedStrList* arg)
 void InitDictionary()
 {
 	// Utility
-	dictionary.insert(std::make_pair("help", HelpParser));				 //usable
+	dictionary.insert(std::make_pair("help", HelpParser));				 // usable
+	dictionary.insert(std::make_pair("hist", HistParser));				 // usable
 	// Basic
 	dictionary.insert(std::make_pair("rotate", RotateParser));           // usable
 	dictionary.insert(std::make_pair("flip", FlipParser));               // usable
@@ -77,16 +75,16 @@ void InitDictionary()
 	dictionary.insert(std::make_pair("sobel", SobelParser));             // usable
 	dictionary.insert(std::make_pair("robert", RobertParser));           // usable
 	dictionary.insert(std::make_pair("prewitt", PrewittParser));         // usable
-	dictionary.insert(std::make_pair("laplacian", LaplacianOfGaussianParser)); //usable
-	dictionary.insert(std::make_pair("kirsch", KirschParser));			//usable
+	dictionary.insert(std::make_pair("laplacian", LaplacianOfGaussianParser)); // usable
+	dictionary.insert(std::make_pair("kirsch", KirschParser));			// usable
 	// Blur
 	dictionary.insert(std::make_pair("blur", BlurParser));               // usable
 	// Color Adjust
-	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser)); //usable
-	dictionary.insert(std::make_pair("nearest", NearestColourParser));   //usable
-	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));	//usable
-	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));	//usable
-	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser)); //usable
+	dictionary.insert(std::make_pair("contrast", ContrastAdjustParser)); // usable
+	dictionary.insert(std::make_pair("nearest", NearestColourParser));   // usable
+	dictionary.insert(std::make_pair("levels", LevelsAdjustParser));	// usable
+	dictionary.insert(std::make_pair("diffuse", ErrorDiffuseParser));	// usable
+	dictionary.insert(std::make_pair("exposure", ExposureAdjustParser)); // usable
 	// Grayscale
 	dictionary.insert(std::make_pair("grayscale", GrayscaleParser));     // usable
 }
@@ -117,7 +115,7 @@ void handlingCommand(char** arg, int length)
 	{
 		std::cout << "--BASIC--\nrotate    flip    crop    scale    resize    blur\n" << std::endl;
 		std::cout << "--EDGE DETECTION--\nsobel    robert    prewitt    kirsch    laplacian\n" << std::endl;
-		std::cout << "--COLOR ADJUST--\ncontrast    nearest    levels    diffuse    exposure    grayscale\n" << std::endl;
+		std::cout << "--COLOR ADJUST--\ncontrast    nearest    levels    diffuse    exposure    grayscale    hist\n" << std::endl;
 	}
 	else if (strcmp(arg[1], "-version") == 0)
 	{

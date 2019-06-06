@@ -346,7 +346,7 @@ int BlueChannel(const Color& c, double factor)
 void DrawHistogram(const Bitmap& bmp, int (*channel)(const Color&, double))
 {
 	const int hWidth = 64;
-	const int hHeight = 64;
+	const int hHeight = 32;
 	int Histogram[hWidth];
 	int maxHValue;
 
