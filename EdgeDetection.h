@@ -281,6 +281,13 @@ Bitmap Kirsch(const Bitmap &in, Direction dir)
 				if (dir == east_north)
 					G[7] += East_North[index] * value;
 			}
+
+			for (int i = 0; i < 8; i++)
+			{
+				if (G[i] < 0)
+					G[i] = 0;
+			}
+			
 			double g = sqrt(G[0] * G[0] + G[1] * G[1] + G[2] * G[2] + G[3] * G[3] + G[4] * G[4] + G[5] * G[5] + G[6] * G[6] + G[7] * G[7]);
 			int color_out = static_cast<int>(g);
 
