@@ -233,14 +233,14 @@ Bitmap Kirsch(const Bitmap &in, Direction dir)
 	Bitmap temp = MakeSquareBitmap(in);
 	out = CopySize(in);
 
-	const int North[] = { -3, -3, +5, -3, 0, 5, -3, -3, +5 };
-	const int North_West[]= { -3, 5, 5, -3, 0, 5, -3, -3, -3 };
-	const int West[] = { 5, 5, 5, -3, 0, -3, -3, -3, -3 };
-	const int West_South[] = { 5, 5, -3, 5, 0, -3, -3, -3, -3 };
-	const int South[] = { 5, -3, -3, 5, 0, -3, 5, -3, -3 };
-	const int South_East[] = { -3, -3, -3, 5, 0, -3, 5, 5, -3 };
-	const int East[] = { -3, -3, -3, -3, 0, -3, 5, 5, 5 };
-	const int East_North[] = { -3, -3, -3, -3, 0, 5, -3, 5, 5 };
+	const int North[] = { 5, 5, 5, -3, 0, -3, -3, -3, -3};
+	const int North_West[]= { 5, 5, -3, 5, 0, -3, -3, -3, -3};
+	const int West[] = { 5, -3, -3, 5, 0, -3, 5, -3, -3 };
+	const int West_South[] = { -3, -3, -3, 5, 0, -3, 5, 5, -3 };
+	const int South[] = { -3, -3, -3, -3, 0, -3, 5, 5, 5 };
+	const int South_East[] = { -3, -3, 5, -3, 0, 5, -3, 5, 5 };
+	const int East[] = { -3, -3, 5, -3, 0, 5, -3, -3, 5 };
+	const int East_North[] = { -3, 5, 5, -3, 0, 5, -3, -3, -3 };
 
 	for (int row = 1; row < temp.height - 1; row++)
 	{
