@@ -1,6 +1,7 @@
 #pragma once
 #include "bitmap/Bitmap.h"
 #include <algorithm>
+#include <iostream>
 
 const double pi = 3.1415926;
 
@@ -318,4 +319,70 @@ Bitmap ExposureAdjust(const Bitmap& bmp, double value)
 			SetPixel(result, row, col, c);
 		}
 	return result;
+}
+
+int LuminanceChannel(const Color& c, double factor)
+{
+	unsigned char max = std::max(std::max(c.R, c.G), c.B);
+	unsigned char min = std::min(std::min(c.R, c.G), c.B);
+	return (max + min) / 2 * factor;
+}
+
+int RedChannel(const Color& c, double factor)
+{
+	return c.R* factor;
+}
+
+int GreenChannel(const Color& c, double factor)
+{
+	return c.G* factor;
+}
+
+int BlueChannel(const Color& c, double factor)
+{
+	return c.B* factor;
+}
+
+void DrawHistogram(const Bitmap& bmp, int (*channel)(const Color&, double))
+{
+	const int hWidth = 64;
+	const int hHeight = 64;
+	int Histogram[hWidth];
+	int maxHValue;
+
+	double factorW = hWidth / 256.0;
+	double factorH;
+
+	for (int i = 0; i < hWidth; i++)
+		Histogram[i] = 0;
+
+	Color c;
+	for (int row = 0; row < bmp.height; row++)
+		for (int col = 0; col < bmp.width; col++)
+		{
+			GetPixel(bmp, row, col, c);
+			Histogram[channel(c, factorW)]++;
+		}
+
+	maxHValue = 0;
+	for (int i = 0; i < hWidth; i++)
+		if (maxHValue < Histogram[i])
+			maxHValue = Histogram[i];
+
+	factorH = (double)hHeight / maxHValue;
+	for (int i = 0; i < hWidth; i++)
+	{
+		Histogram[i] *= factorH;
+	}
+
+	std::cout << '\n';
+	for (int i = hHeight; i > 0; i--)
+	{
+		for (int j = 0; j < hWidth; j++)
+			std::cout << (i <= Histogram[j] ? (char)219 : ' ');
+		std::cout << '\n';
+	}
+	for (int i = 0; i < hWidth; i++)
+		std::cout << '-';
+	std::cout << "\n\n";
 }
