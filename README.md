@@ -25,6 +25,9 @@ Sorry, we haven't release on these platforms yet. But you can build it yourself 
 `impr list` to list all image processing features supported by impr.
 
 `impr help <feature name>` to review the doc of the feature. For example, if you want to know how to use `rotate` command. Type `impr help rotate`.
+## Contribution
+
+We are looking forward to contributions. Please first open an issue about what you want to contribute to the project.
 
 ## License
 
