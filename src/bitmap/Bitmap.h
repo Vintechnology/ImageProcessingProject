@@ -1,29 +1,32 @@
-#ifndef _BITMAP_
-#define _BITMAP_
+#ifndef _IMAGE_
+#define _IMAGE_
 
-
-struct Bitmap
-{
-	int width;
-	int height;
-	int rowSize;
-	unsigned char *pixels;
-};
 struct Color
 {
 	unsigned char R, G, B;
 };
 
-int LoadBitmap(const char *fname, Bitmap &bmp);
-int SaveBitmap(const char *fname, const Bitmap &bmp);
-void DisposeBitmap(Bitmap &bmp);
+class Image
+{
+public:
+	Image(const char* fname);
+	int Save(const char *fname);
+	~Image();
 
-int SetPixel(const Bitmap &bmp, int row, int col, Color color);
-int GetPixel(const Bitmap &bmp, int row, int col, Color &color);
+	int SetPixel(int row, int col, Color color);
+	int GetPixel(int row, int col, Color &color);
 
-void AdjustBrightness(const Bitmap &bmp, double factor);
-void Enlarge(const Bitmap &inbmp, Bitmap &outbmp, int factor);
+	int GetWidth();
+	int GetHeight();
+	int SetWidth();
+	int SetHeight();
 
-
+	//void AdjustBrightness(const Bitmap &bmp, double factor);
+	//void Enlarge(const Bitmap &inbmp, Bitmap &outbmp, int factor);
+private:
+	int width;
+	int height;
+	int rowSize;
+	unsigned char *pixels;
+};
 #endif
-#pragma once

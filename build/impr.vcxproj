@@ -313,8 +313,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\myProjects\impr\src\bitmap\Bitmap1.cpp" />
-    <ClCompile Include="D:\myProjects\impr\src\bitmap\Bitmap2.cpp" />
+    <ClCompile Include="..\src\bitmap\Bitmap.cpp" />
     <ClCompile Include="D:\myProjects\impr\src\mainProgram.cpp" />
     <ClInclude Include="D:\myProjects\impr\src\Basic.h" />
     <ClInclude Include="D:\myProjects\impr\src\Blur.h" />
