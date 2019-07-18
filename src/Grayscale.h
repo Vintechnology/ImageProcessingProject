@@ -1,5 +1,5 @@
 #pragma once
-#include "bitmap\Bitmap.h"
+#include "bitmap/Bitmap.h"
 #include "Blur.h"
 #include <cmath>
 struct Grayscale

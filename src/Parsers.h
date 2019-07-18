@@ -4,6 +4,7 @@
 #include "util/LinkedList.h"
 #include "util/TypeConvert.h"
 #include <string>
+#include <cstring>
 
 #define DEFAULT_OUTPUT_FILENAME "out.bmp"
 #define FILE_FORMAT ".bmp"

@@ -7,4 +7,3 @@ ipch/
 *.sdf
 *.opensdf
 .vs
-build/

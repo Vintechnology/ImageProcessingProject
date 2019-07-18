@@ -6,6 +6,7 @@
 #include "util/LinkedList.h"
 #include "Parsers.h"
 #include "usage.h"
+#include <cstring>
 
 std::string VERSION = "0.0.1";
 

@@ -3,6 +3,7 @@
 #include "bitmap/Bitmap.h"
 #include <iostream>
 #include <math.h>
+#include <cstring>
 
 Bitmap Rotate(const Bitmap &inbmp, int degree)
 {

@@ -24,6 +24,5 @@ int GetPixel(const Bitmap &bmp, int row, int col, Color &color);
 void AdjustBrightness(const Bitmap &bmp, double factor);
 void Enlarge(const Bitmap &inbmp, Bitmap &outbmp, int factor);
 
-
 #endif
 #pragma once
